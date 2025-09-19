@@ -1,0 +1,201 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
+
+const Home = () => {
+  const { isAuthenticated } = useAuth();
+
+  return (
+    <div className="min-h-screen bg-white">
+      {/* Navigation */}
+      <nav className="bg-white shadow-sm border-b border-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <div className="flex items-center">
+              <div className="flex-shrink-0">
+                <h1 className="text-2xl font-bold text-blue-600">Doctorry</h1>
+              </div>
+            </div>
+            <div className="flex items-center space-x-4">
+              {isAuthenticated ? (
+                <>
+                  <Link
+                    to="/dashboard"
+                    className="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition duration-200"
+                  >
+                    Dashboard
+                  </Link>
+                  <Link
+                    to="/book-appointment"
+                    className="bg-green-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-green-700 transition duration-200"
+                  >
+                    Book Appointment
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link
+                    to="/login"
+                    className="text-gray-700 hover:text-blue-600 font-medium transition duration-200"
+                  >
+                    Sign In
+                  </Link>
+                  <Link
+                    to="/register"
+                    className="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition duration-200"
+                  >
+                    Get Started
+                  </Link>
+                </>
+              )}
+              <div className="border-l border-gray-300 h-6"></div>
+              <div className="flex space-x-2">
+                <Link
+                  to="/admin/login"
+                  className="text-gray-500 hover:text-gray-700 text-sm font-medium transition duration-200"
+                >
+                  Admin
+                </Link>
+                <Link
+                  to="/doctor/login"
+                  className="text-gray-500 hover:text-gray-700 text-sm font-medium transition duration-200"
+                >
+                  Doctor
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      {/* Hero Section */}
+      <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/5 to-indigo-600/5"></div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+          <div className="text-center">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+              Your Health,
+              <span className="text-blue-600 block">Simplified</span>
+            </h1>
+            <p className="text-xl sm:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
+              Manage your medical records, track your health journey, and stay connected with your healthcare providers all in one secure platform.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              {!isAuthenticated && (
+                <>
+                  <Link
+                    to="/register"
+                    className="bg-blue-600 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-blue-700 transition duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+                  >
+                    Start Your Journey
+                  </Link>
+                  <Link
+                    to="/login"
+                    className="border-2 border-blue-600 text-blue-600 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-blue-600 hover:text-white transition duration-200"
+                  >
+                    Sign In
+                  </Link>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+        
+        {/* Background Elements */}
+        <div className="absolute top-20 left-10 w-20 h-20 bg-blue-200 rounded-full opacity-20 animate-pulse"></div>
+        <div className="absolute top-40 right-20 w-16 h-16 bg-indigo-200 rounded-full opacity-20 animate-pulse delay-1000"></div>
+        <div className="absolute bottom-20 left-20 w-12 h-12 bg-blue-300 rounded-full opacity-20 animate-pulse delay-2000"></div>
+        <div className="absolute bottom-40 right-10 w-24 h-24 bg-indigo-300 rounded-full opacity-20 animate-pulse delay-500"></div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+              Why Choose Doctorry?
+            </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              We've designed our platform with patients in mind, offering intuitive tools to manage your health information.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="text-center p-6 rounded-2xl hover:shadow-lg transition duration-200">
+              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">Secure Records</h3>
+              <p className="text-gray-600">
+                Your medical information is encrypted and stored securely, accessible only to you and authorized healthcare providers.
+              </p>
+            </div>
+
+            <div className="text-center p-6 rounded-2xl hover:shadow-lg transition duration-200">
+              <div className="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg className="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">24/7 Access</h3>
+              <p className="text-gray-600">
+                Access your health records anytime, anywhere. No more waiting for office hours or misplaced documents.
+              </p>
+            </div>
+
+            <div className="text-center p-6 rounded-2xl hover:shadow-lg transition duration-200">
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">Quick & Easy</h3>
+              <p className="text-gray-600">
+                Simple, intuitive interface designed for all ages. Manage your health information without the complexity.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 bg-gradient-to-r from-blue-600 to-indigo-600">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+            Ready to Take Control of Your Health?
+          </h2>
+          <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
+            Join thousands of patients who have simplified their healthcare journey with Doctorry.
+          </p>
+          {!isAuthenticated && (
+            <Link
+              to="/register"
+              className="bg-white text-blue-600 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gray-50 transition duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1 inline-block"
+            >
+              Get Started Today
+            </Link>
+          )}
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-gray-900 text-white py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h3 className="text-2xl font-bold mb-4">Doctorry</h3>
+            <p className="text-gray-400 mb-4">
+              Empowering patients with better healthcare management.
+            </p>
+            <p className="text-gray-500 text-sm">
+              © 2024 Doctorry. All rights reserved.
+            </p>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+};
+
+export default Home;
