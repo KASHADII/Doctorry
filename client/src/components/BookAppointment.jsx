@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { MEDICAL_SPECIALIZATIONS } from '../constants/medicalConstants';
+import { useTranslation } from 'react-i18next';
 
 const BookAppointment = () => {
   const [step, setStep] = useState(1);
@@ -15,6 +16,7 @@ const BookAppointment = () => {
   const [error, setError] = useState('');
   const { isAuthenticated, user } = useAuth();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   // Using shared specializations from constants
 
@@ -142,11 +144,11 @@ const BookAppointment = () => {
               onClick={() => navigate('/dashboard')}
               className="text-indigo-600 hover:text-indigo-800 font-medium"
             >
-              ← Back to Dashboard
+              {t('back_to_dashboard')}
             </button>
           </div>
-          <h1 className="text-3xl font-bold text-gray-900">Book Video Consultation</h1>
-          <p className="mt-2 text-gray-600">Schedule your appointment with our specialists</p>
+          <h1 className="text-3xl font-bold text-gray-900">{t('book_video_consultation')}</h1>
+          <p className="mt-2 text-gray-600">{t('schedule_appointment_specialists')}</p>
         </div>
 
         {/* Progress Steps */}

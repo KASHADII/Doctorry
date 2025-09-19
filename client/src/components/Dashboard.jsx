@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 const Dashboard = () => {
   const { user, logout, updateProfile } = useAuth();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [isEditing, setIsEditing] = useState(false);
   const [editData, setEditData] = useState({});
   const [loading, setLoading] = useState(false);
@@ -105,7 +107,7 @@ const Dashboard = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
-              <h1 className="text-2xl font-bold text-blue-600">Doctorry</h1>
+              <h1 className="text-2xl font-bold text-blue-600">{t('doctorry')}</h1>
             </div>
             <div className="flex items-center space-x-4">
               <nav className="hidden md:flex space-x-6">
@@ -113,21 +115,21 @@ const Dashboard = () => {
                   onClick={() => navigate('/book-appointment')}
                   className="text-gray-600 hover:text-blue-600 font-medium transition duration-200"
                 >
-                  Book Appointment
+                  {t('book_appointment')}
                 </button>
                 <button
                   onClick={() => navigate('/appointments')}
                   className="text-gray-600 hover:text-blue-600 font-medium transition duration-200"
                 >
-                  My Appointments
+                  {t('my_appointments')}
                 </button>
               </nav>
-              <span className="text-gray-700">Welcome, {user.firstName}</span>
+              <span className="text-gray-700">{t('welcome')}, {user.firstName}</span>
               <button
                 onClick={handleLogout}
                 className="text-gray-600 hover:text-gray-900 font-medium transition duration-200"
               >
-                Logout
+                {t('logout')}
               </button>
             </div>
           </div>
@@ -137,8 +139,8 @@ const Dashboard = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Welcome Message */}
         <div className="mb-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">Patient Dashboard</h2>
-          <p className="text-gray-600">Manage your health information and medical records</p>
+          <h2 className="text-3xl font-bold text-gray-900 mb-2">{t('patient_dashboard')}</h2>
+          <p className="text-gray-600">{t('manage_health_information')}</p>
         </div>
 
         {/* Quick Actions */}
@@ -146,13 +148,13 @@ const Dashboard = () => {
           <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl shadow-lg p-6 text-white">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-lg font-semibold mb-2">Book Appointment</h3>
-                <p className="text-blue-100 text-sm mb-4">Schedule a video consultation with our specialists</p>
+                <h3 className="text-lg font-semibold mb-2">{t('book_appointment')}</h3>
+                <p className="text-blue-100 text-sm mb-4">{t('schedule_appointment_specialists')}</p>
                 <button
                   onClick={() => navigate('/book-appointment')}
                   className="bg-white text-blue-600 px-4 py-2 rounded-lg font-medium hover:bg-blue-50 transition duration-200"
                 >
-                  Book Now
+                  {t('book_now')}
                 </button>
               </div>
               <div className="text-4xl opacity-20">
@@ -166,13 +168,13 @@ const Dashboard = () => {
           <div className="bg-gradient-to-r from-green-500 to-green-600 rounded-2xl shadow-lg p-6 text-white">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-lg font-semibold mb-2">My Appointments</h3>
-                <p className="text-green-100 text-sm mb-4">View and manage your scheduled appointments</p>
+                <h3 className="text-lg font-semibold mb-2">{t('my_appointments')}</h3>
+                <p className="text-green-100 text-sm mb-4">{t('manage_scheduled_consultations')}</p>
                 <button
                   onClick={() => navigate('/appointments')}
                   className="bg-white text-green-600 px-4 py-2 rounded-lg font-medium hover:bg-green-50 transition duration-200"
                 >
-                  View All
+                  {t('view_all')}
                 </button>
               </div>
               <div className="text-4xl opacity-20">
@@ -186,13 +188,13 @@ const Dashboard = () => {
           <div className="bg-gradient-to-r from-purple-500 to-purple-600 rounded-2xl shadow-lg p-6 text-white">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-lg font-semibold mb-2">Health Records</h3>
-                <p className="text-purple-100 text-sm mb-4">Access your medical history and prescriptions</p>
+                <h3 className="text-lg font-semibold mb-2">{t('health_records')}</h3>
+                <p className="text-purple-100 text-sm mb-4">{t('access_medical_history')}</p>
                 <button
                   onClick={() => navigate('/health-records')}
                   className="bg-white text-purple-600 px-4 py-2 rounded-lg font-medium hover:bg-purple-50 transition duration-200"
                 >
-                  View Records
+                  {t('view_records')}
                 </button>
               </div>
               <div className="text-4xl opacity-20">

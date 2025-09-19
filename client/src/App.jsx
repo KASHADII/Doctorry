@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { useTranslation } from 'react-i18next';
 import Home from './components/Home';
 import Login from './components/Login';
 import Register from './components/Register';
@@ -12,6 +13,7 @@ import DoctorDashboard from './components/DoctorDashboard';
 import BookAppointment from './components/BookAppointment';
 import VideoCall from './components/VideoCall';
 import AppointmentsList from './components/AppointmentsList';
+import LanguageSwitcher from './components/LanguageSwitcher';
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -54,6 +56,7 @@ function App() {
     <AuthProvider>
       <Router>
         <div className="App">
+          <LanguageSwitcher />
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={<Home />} />

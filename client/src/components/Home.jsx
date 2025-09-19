@@ -1,9 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 const Home = () => {
   const { isAuthenticated } = useAuth();
+  const { t } = useTranslation();
 
   return (
     <div className="min-h-screen bg-white">
@@ -13,7 +15,7 @@ const Home = () => {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
               <div className="flex-shrink-0">
-                <h1 className="text-2xl font-bold text-blue-600">Doctorry</h1>
+                <h1 className="text-2xl font-bold text-blue-600">{t('doctorry')}</h1>
               </div>
             </div>
             <div className="flex items-center space-x-4">
@@ -23,13 +25,13 @@ const Home = () => {
                     to="/dashboard"
                     className="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition duration-200"
                   >
-                    Dashboard
+                    {t('dashboard')}
                   </Link>
                   <Link
                     to="/book-appointment"
                     className="bg-green-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-green-700 transition duration-200"
                   >
-                    Book Appointment
+                    {t('book_appointment')}
                   </Link>
                 </>
               ) : (
@@ -38,13 +40,13 @@ const Home = () => {
                     to="/login"
                     className="text-gray-700 hover:text-blue-600 font-medium transition duration-200"
                   >
-                    Sign In
+                    {t('login')}
                   </Link>
                   <Link
                     to="/register"
                     className="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition duration-200"
                   >
-                    Get Started
+                    {t('register')}
                   </Link>
                 </>
               )}
@@ -54,13 +56,13 @@ const Home = () => {
                   to="/admin/login"
                   className="text-gray-500 hover:text-gray-700 text-sm font-medium transition duration-200"
                 >
-                  Admin
+                  {t('admin')}
                 </Link>
                 <Link
                   to="/doctor/login"
                   className="text-gray-500 hover:text-gray-700 text-sm font-medium transition duration-200"
                 >
-                  Doctor
+                  {t('doctor')}
                 </Link>
               </div>
             </div>
