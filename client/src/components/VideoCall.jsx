@@ -6,9 +6,9 @@ const VideoCall = () => {
   const { appointmentId } = useParams();
   const navigate = useNavigate();
   
-  // Agora configuration
-  const APP_ID = process.env.REACT_APP_AGORA_APP_ID || 'your-agora-app-id';
-  const TOKEN = process.env.REACT_APP_AGORA_TOKEN || null; // You'll need to generate this
+  // Agora configuration - using environment variable
+  const APP_ID = import.meta.env.VITE_AGORA_APP_ID || 'ec41c49da5c0442b892490a9bbd037d5';
+  const TOKEN = import.meta.env.VITE_AGORA_TOKEN || null;
   
   // State management
   const [isJoined, setIsJoined] = useState(false);
@@ -54,14 +54,7 @@ const VideoCall = () => {
 
       if (response.ok) {
         setAppointment(data.appointment);
-        // Check if it's time for the appointment
-        const appointmentTime = new Date(data.appointment.appointmentDate);
-        const now = new Date();
-        const timeDiff = appointmentTime.getTime() - now.getTime();
-        
-        if (timeDiff > 0 && timeDiff > 15 * 60 * 1000) { // More than 15 minutes early
-          setError('Appointment is not yet available. Please wait for the scheduled time.');
-        }
+        // Allow immediate call joining for testing - no timing restrictions
       } else {
         setError(data.message);
       }
@@ -115,11 +108,24 @@ const VideoCall = () => {
       // Create audio track
       localAudioTrackRef.current = await AgoraRTC.createMicrophoneAudioTrack();
       
-      // Create video track
-      localVideoTrackRef.current = await AgoraRTC.createCameraVideoTrack();
+      // Create video track with better configuration
+      localVideoTrackRef.current = await AgoraRTC.createCameraVideoTrack({
+        encoderConfig: {
+          width: 640,
+          height: 480,
+          frameRate: 15,
+          bitrateMin: 200,
+          bitrateMax: 400
+        }
+      });
       
-      // Play local video
-      localVideoTrackRef.current.play(localVideoRef.current);
+      // Play local video with better styling
+      if (localVideoRef.current) {
+        localVideoTrackRef.current.play(localVideoRef.current, {
+          mirror: true, // Mirror the local video
+          fit: 'cover' // Cover the container
+        });
+      }
       
       // Publish tracks
       await clientRef.current.publish([
@@ -140,7 +146,11 @@ const VideoCall = () => {
       
       if (mediaType === 'video') {
         const remoteVideoTrack = user.videoTrack;
-        remoteVideoTrack.play(remoteVideoRef.current);
+        if (remoteVideoRef.current) {
+          remoteVideoTrack.play(remoteVideoRef.current, {
+            fit: 'cover' // Cover the container
+          });
+        }
       }
       
       if (mediaType === 'audio') {
@@ -263,10 +273,17 @@ const VideoCall = () => {
     
     try {
       // Check for camera and microphone permissions
+      console.log('Requesting camera and microphone permissions...');
       const stream = await navigator.mediaDevices.getUserMedia({ 
-        video: true, 
+        video: { 
+          width: { ideal: 640 },
+          height: { ideal: 480 },
+          frameRate: { ideal: 15 }
+        }, 
         audio: true 
       });
+      
+      console.log('Permissions granted, stream created:', stream);
       
       // Stop the test stream
       stream.getTracks().forEach(track => track.stop());
@@ -275,7 +292,13 @@ const VideoCall = () => {
       await initializeAgora();
     } catch (error) {
       console.error('Permission denied or device error:', error);
-      setError('Camera and microphone access is required for video calls. Please allow permissions and try again.');
+      if (error.name === 'NotAllowedError') {
+        setError('Camera and microphone access is required for video calls. Please allow permissions and try again.');
+      } else if (error.name === 'NotFoundError') {
+        setError('No camera or microphone found. Please check your device.');
+      } else {
+        setError('Failed to access camera and microphone. Please check your device settings.');
+      }
     } finally {
       setLoading(false);
     }
@@ -335,59 +358,89 @@ const VideoCall = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
-      {/* Call Header */}
-      <div className="bg-gray-800 p-4 flex justify-between items-center">
-        <div>
-          <h1 className="text-lg font-semibold">
-            Dr. {appointment?.doctor.firstName} {appointment?.doctor.lastName}
-          </h1>
-          <p className="text-sm text-gray-300">
-            {appointment?.specialization} • {formatDuration(callDuration)}
-          </p>
+    <div className="min-h-screen bg-black text-white flex flex-col">
+      {/* Mobile-First Header */}
+      <div className="bg-gray-900 p-3 flex justify-between items-center sticky top-0 z-10">
+        <div className="flex items-center space-x-3">
+          <button
+            onClick={() => navigate('/appointments')}
+            className="p-2 rounded-full bg-gray-700 hover:bg-gray-600"
+          >
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
+            </svg>
+          </button>
+          <div>
+            <h1 className="text-sm font-semibold">
+              Dr. {appointment?.doctor.firstName} {appointment?.doctor.lastName}
+            </h1>
+            <p className="text-xs text-gray-400">
+              {appointment?.specialization} • {formatDuration(callDuration)}
+            </p>
+          </div>
         </div>
-        <div className="flex items-center space-x-4">
-          <span className="text-sm">Call in progress</span>
-          <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+        <div className="flex items-center space-x-2">
+          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+          <span className="text-xs text-gray-400">Live</span>
         </div>
       </div>
 
-      {/* Video Container */}
-      <div className="flex-1 p-4">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 h-96">
-          {/* Remote Video */}
-          <div className="bg-gray-800 rounded-lg overflow-hidden">
-            <div 
-              ref={remoteVideoRef}
-              className="w-full h-full"
-            />
-            <div className="absolute bottom-4 left-4 bg-black bg-opacity-50 px-2 py-1 rounded text-sm">
-              Doctor
-            </div>
-          </div>
-
-          {/* Local Video */}
-          <div className="bg-gray-800 rounded-lg overflow-hidden relative">
-            <div 
-              ref={localVideoRef}
-              className="w-full h-full"
-            />
-            <div className="absolute bottom-4 left-4 bg-black bg-opacity-50 px-2 py-1 rounded text-sm">
-              You
+      {/* Mobile-First Video Container */}
+      <div className="flex-1 relative">
+        {/* Main Video (Remote) - Full Screen on Mobile */}
+        <div className="absolute inset-0 bg-gray-800">
+          <div 
+            ref={remoteVideoRef}
+            className="w-full h-full object-cover"
+            style={{ minHeight: '100%' }}
+          />
+          {/* No video placeholder */}
+          <div className="absolute inset-0 flex items-center justify-center bg-gray-800">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-gray-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg className="w-8 h-8 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <p className="text-gray-400 text-sm">Waiting for doctor...</p>
             </div>
           </div>
         </div>
+
+        {/* Local Video - Picture-in-Picture */}
+        <div className="absolute top-4 right-4 w-24 h-32 bg-gray-700 rounded-lg overflow-hidden shadow-lg border-2 border-gray-600">
+          <div 
+            ref={localVideoRef}
+            className="w-full h-full object-cover"
+          />
+          {/* Local video placeholder */}
+          <div className="absolute inset-0 flex items-center justify-center bg-gray-700">
+            <div className="text-center">
+              <div className="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center mx-auto mb-1">
+                <svg className="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <p className="text-gray-400 text-xs">You</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Connection Status */}
+        <div className="absolute top-4 left-4 bg-black bg-opacity-50 px-3 py-1 rounded-full">
+          <span className="text-xs text-white">Connected</span>
+        </div>
       </div>
 
-      {/* Call Controls */}
-      <div className="bg-gray-800 p-6">
-        <div className="flex justify-center space-x-4">
+      {/* Mobile-First Call Controls */}
+      <div className="bg-gray-900 p-4 pb-6">
+        <div className="flex justify-center items-center space-x-6">
           {/* Mute Button */}
           <button
             onClick={toggleMute}
-            className={`w-12 h-12 rounded-full flex items-center justify-center ${
-              isMuted ? 'bg-red-600' : 'bg-gray-600'
-            } hover:bg-opacity-80`}
+            className={`w-14 h-14 rounded-full flex items-center justify-center transition-all ${
+              isMuted ? 'bg-red-600 hover:bg-red-700' : 'bg-gray-600 hover:bg-gray-500'
+            }`}
           >
             {isMuted ? (
               <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
@@ -403,9 +456,9 @@ const VideoCall = () => {
           {/* Video Toggle Button */}
           <button
             onClick={toggleVideo}
-            className={`w-12 h-12 rounded-full flex items-center justify-center ${
-              isVideoEnabled ? 'bg-gray-600' : 'bg-red-600'
-            } hover:bg-opacity-80`}
+            className={`w-14 h-14 rounded-full flex items-center justify-center transition-all ${
+              isVideoEnabled ? 'bg-gray-600 hover:bg-gray-500' : 'bg-red-600 hover:bg-red-700'
+            }`}
           >
             {isVideoEnabled ? (
               <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
@@ -422,9 +475,9 @@ const VideoCall = () => {
           {/* Screen Share Button */}
           <button
             onClick={toggleScreenShare}
-            className={`w-12 h-12 rounded-full flex items-center justify-center ${
-              isScreenSharing ? 'bg-blue-600' : 'bg-gray-600'
-            } hover:bg-opacity-80`}
+            className={`w-14 h-14 rounded-full flex items-center justify-center transition-all ${
+              isScreenSharing ? 'bg-blue-600 hover:bg-blue-700' : 'bg-gray-600 hover:bg-gray-500'
+            }`}
           >
             <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-2 0V5H5v10h10v-1a1 1 0 112 0v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm10 4a1 1 0 011-1h3a1 1 0 011 1v6a1 1 0 01-1 1h-3a1 1 0 01-1-1V8zm2 1v4h1V9h-1z" clipRule="evenodd" />
@@ -434,7 +487,7 @@ const VideoCall = () => {
           {/* End Call Button */}
           <button
             onClick={leaveCall}
-            className="w-12 h-12 rounded-full bg-red-600 flex items-center justify-center hover:bg-red-700"
+            className="w-14 h-14 rounded-full bg-red-600 hover:bg-red-700 flex items-center justify-center transition-all"
           >
             <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />

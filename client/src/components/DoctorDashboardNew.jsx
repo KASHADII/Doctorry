@@ -324,14 +324,8 @@ const DoctorDashboard = () => {
   };
 
   const canJoinCall = (appointment) => {
-    const appointmentTime = new Date(appointment.appointmentDate);
-    const now = new Date();
-    const timeDiff = appointmentTime.getTime() - now.getTime();
-    const fiveMinutes = 5 * 60 * 1000;
-    const thirtyMinutesLate = -30 * 60 * 1000;
-
-    return timeDiff <= fiveMinutes && timeDiff >= thirtyMinutesLate && 
-           ['scheduled', 'confirmed'].includes(appointment.status);
+    // Allow immediate call joining for testing - only check status
+    return ['scheduled', 'confirmed'].includes(appointment.status);
   };
 
   if (loading && !doctor) {

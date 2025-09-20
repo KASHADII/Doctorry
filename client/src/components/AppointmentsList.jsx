@@ -54,22 +54,7 @@ const AppointmentsList = () => {
   };
 
   const handleJoinCall = (appointment) => {
-    // Check if it's time for the appointment (allow 5 minutes before)
-    const appointmentTime = new Date(appointment.appointmentDate);
-    const now = new Date();
-    const timeDiff = appointmentTime.getTime() - now.getTime();
-    const fiveMinutes = 5 * 60 * 1000;
-
-    if (timeDiff > fiveMinutes) {
-      setError('Appointment is not yet available. Please wait for the scheduled time.');
-      return;
-    }
-
-    if (timeDiff < -30 * 60 * 1000) { // More than 30 minutes late
-      setError('Appointment time has passed. Please contact support.');
-      return;
-    }
-
+    // Allow immediate call joining for testing
     navigate(`/video-call/${appointment._id}`);
   };
 
@@ -121,14 +106,8 @@ const AppointmentsList = () => {
   };
 
   const canJoinCall = (appointment) => {
-    const appointmentTime = new Date(appointment.appointmentDate);
-    const now = new Date();
-    const timeDiff = appointmentTime.getTime() - now.getTime();
-    const fiveMinutes = 5 * 60 * 1000;
-    const thirtyMinutesLate = -30 * 60 * 1000;
-
-    return timeDiff <= fiveMinutes && timeDiff >= thirtyMinutesLate && 
-           ['scheduled', 'confirmed'].includes(appointment.status);
+    // Allow immediate call joining for testing - only check status
+    return ['scheduled', 'confirmed'].includes(appointment.status);
   };
 
   const formatDate = (dateString) => {

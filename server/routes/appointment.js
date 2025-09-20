@@ -105,7 +105,7 @@ router.post('/book', authenticateToken, async (req, res, next) => {
     const appointmentId = Appointment.generateAppointmentId();
     const callRoomId = Appointment.generateCallRoomId();
 
-    // Create appointment
+    // Create appointment (auto-confirmed for testing)
     const appointment = new Appointment({
       appointmentId,
       patient: req.user.userId,
@@ -115,7 +115,8 @@ router.post('/book', authenticateToken, async (req, res, next) => {
       symptoms,
       consultationType,
       callRoomId,
-      amount: doctor.consultationFee
+      amount: doctor.consultationFee,
+      status: 'confirmed' // Auto-confirm for testing
     });
 
     await appointment.save();
