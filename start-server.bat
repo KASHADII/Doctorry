@@ -1,0 +1,6 @@
+@echo off
+echo Installing web-push dependency...
+cd /d "C:\Coding\Hackhathon\Doctorry\server"
+npm install web-push
+echo Starting server...
+npm start

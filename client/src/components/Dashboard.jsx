@@ -145,14 +145,19 @@ const Dashboard = () => {
 
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl shadow-lg p-6 text-white">
+          <div className="rounded-2xl shadow-lg p-6 text-white" style={{
+            background: 'linear-gradient(to right, var(--color-primary), var(--color-primary-dark))'
+          }}>
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-lg font-semibold mb-2">{t('book_appointment')}</h3>
-                <p className="text-blue-100 text-sm mb-4">{t('schedule_appointment_specialists')}</p>
+                <p className="text-sm mb-4" style={{color: 'var(--color-gray-100)'}}>{t('schedule_appointment_specialists')}</p>
                 <button
                   onClick={() => navigate('/book-appointment')}
-                  className="bg-white text-blue-600 px-4 py-2 rounded-lg font-medium hover:bg-blue-50 transition duration-200"
+                  className="bg-white px-4 py-2 rounded-lg font-medium transition duration-200"
+                  style={{color: 'var(--color-primary)'}}
+                  onMouseEnter={(e) => e.target.style.backgroundColor = 'var(--color-gray-50)'}
+                  onMouseLeave={(e) => e.target.style.backgroundColor = 'var(--color-white)'}
                 >
                   {t('book_now')}
                 </button>
@@ -165,14 +170,19 @@ const Dashboard = () => {
             </div>
           </div>
 
-          <div className="bg-gradient-to-r from-green-500 to-green-600 rounded-2xl shadow-lg p-6 text-white">
+          <div className="rounded-2xl shadow-lg p-6 text-white" style={{
+            background: 'linear-gradient(to right, var(--color-accent-green), var(--color-accent-green-dark))'
+          }}>
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-lg font-semibold mb-2">{t('my_appointments')}</h3>
-                <p className="text-green-100 text-sm mb-4">{t('manage_scheduled_consultations')}</p>
+                <p className="text-sm mb-4" style={{color: 'var(--color-gray-100)'}}>{t('manage_scheduled_consultations')}</p>
                 <button
                   onClick={() => navigate('/appointments')}
-                  className="bg-white text-green-600 px-4 py-2 rounded-lg font-medium hover:bg-green-50 transition duration-200"
+                  className="bg-white px-4 py-2 rounded-lg font-medium transition duration-200"
+                  style={{color: 'var(--color-accent-green)'}}
+                  onMouseEnter={(e) => e.target.style.backgroundColor = 'var(--color-gray-50)'}
+                  onMouseLeave={(e) => e.target.style.backgroundColor = 'var(--color-white)'}
                 >
                   {t('view_all')}
                 </button>
@@ -185,14 +195,19 @@ const Dashboard = () => {
             </div>
           </div>
 
-          <div className="bg-gradient-to-r from-purple-500 to-purple-600 rounded-2xl shadow-lg p-6 text-white">
+          <div className="rounded-2xl shadow-lg p-6 text-white" style={{
+            background: 'linear-gradient(to right, var(--color-accent-teal), var(--color-accent-teal-dark))'
+          }}>
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-lg font-semibold mb-2">{t('health_records')}</h3>
-                <p className="text-purple-100 text-sm mb-4">{t('access_medical_history')}</p>
+                <p className="text-sm mb-4" style={{color: 'var(--color-gray-100)'}}>{t('access_medical_history')}</p>
                 <button
                   onClick={() => navigate('/health-records')}
-                  className="bg-white text-purple-600 px-4 py-2 rounded-lg font-medium hover:bg-purple-50 transition duration-200"
+                  className="bg-white px-4 py-2 rounded-lg font-medium transition duration-200"
+                  style={{color: 'var(--color-accent-teal)'}}
+                  onMouseEnter={(e) => e.target.style.backgroundColor = 'var(--color-gray-50)'}
+                  onMouseLeave={(e) => e.target.style.backgroundColor = 'var(--color-white)'}
                 >
                   {t('view_records')}
                 </button>
@@ -223,24 +238,37 @@ const Dashboard = () => {
             {!isEditing ? (
               <button
                 onClick={handleEdit}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition duration-200"
+                className="text-white px-4 py-2 rounded-lg font-medium transition duration-200"
+                style={{backgroundColor: 'var(--color-primary)'}}
+                onMouseEnter={(e) => e.target.style.backgroundColor = 'var(--color-primary-dark)'}
+                onMouseLeave={(e) => e.target.style.backgroundColor = 'var(--color-primary)'}
               >
-{t('edit_profile')}
+                {t('edit_profile')}
               </button>
             ) : (
               <div className="flex space-x-2">
                 <button
                   onClick={handleSave}
                   disabled={loading}
-                  className="bg-green-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-green-700 transition duration-200 disabled:opacity-50"
+                  className="text-white px-4 py-2 rounded-lg font-medium transition duration-200 disabled:opacity-50"
+                  style={{backgroundColor: 'var(--color-accent-green)'}}
+                  onMouseEnter={(e) => {
+                    if (!loading) e.target.style.backgroundColor = 'var(--color-accent-green-dark)';
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!loading) e.target.style.backgroundColor = 'var(--color-accent-green)';
+                  }}
                 >
                   {loading ? t('saving') : t('save_changes')}
                 </button>
                 <button
                   onClick={handleCancel}
-                  className="bg-gray-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-gray-700 transition duration-200"
+                  className="text-white px-4 py-2 rounded-lg font-medium transition duration-200"
+                  style={{backgroundColor: 'var(--color-gray-600)'}}
+                  onMouseEnter={(e) => e.target.style.backgroundColor = 'var(--color-gray-700)'}
+                  onMouseLeave={(e) => e.target.style.backgroundColor = 'var(--color-gray-600)'}
                 >
-{t('cancel')}
+                  {t('cancel')}
                 </button>
               </div>
             )}

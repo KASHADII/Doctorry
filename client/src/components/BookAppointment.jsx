@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { MEDICAL_SPECIALIZATIONS } from '../constants/medicalConstants';
 import { useTranslation } from 'react-i18next';
+import Navbar from './Navbar';
 
 const BookAppointment = () => {
   const [step, setStep] = useState(1);
@@ -17,8 +18,6 @@ const BookAppointment = () => {
   const { isAuthenticated, user } = useAuth();
   const navigate = useNavigate();
   const { t } = useTranslation();
-
-  // Using shared specializations from constants
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -100,7 +99,6 @@ const BookAppointment = () => {
       const data = await response.json();
 
       if (response.ok) {
-        // Navigate to appointment confirmation or dashboard
         navigate('/appointments', { state: { success: t('appointment_booked_successfully') } });
       } else {
         setError(data.message);
@@ -124,42 +122,42 @@ const BookAppointment = () => {
 
   const getMinDate = () => {
     const today = new Date();
-    today.setDate(today.getDate() + 1); // Tomorrow
+    today.setDate(today.getDate() + 1);
     return today.toISOString().split('T')[0];
   };
 
   const getMaxDate = () => {
     const maxDate = new Date();
-    maxDate.setDate(maxDate.getDate() + 30); // 30 days from now
+    maxDate.setDate(maxDate.getDate() + 30);
     return maxDate.toISOString().split('T')[0];
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <div className="mb-4">
-            <button
-              onClick={() => navigate('/dashboard')}
-              className="text-indigo-600 hover:text-indigo-800 font-medium"
-            >
-              {t('back_to_dashboard')}
-            </button>
+    <div className="min-h-screen bg-gray-50">
+      <Navbar />
+      
+      {/* Hero Section */}
+      <section className="bg-gradient-to-r from-blue-600 to-blue-700 py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center text-white">
+            <h1 className="text-4xl sm:text-5xl font-bold mb-4">Book Your Appointment</h1>
+            <p className="text-xl text-blue-100 max-w-3xl mx-auto">
+              Schedule a consultation with our expert doctors and get the care you need.
+            </p>
           </div>
-          <h1 className="text-3xl font-bold text-gray-900">{t('book_video_consultation')}</h1>
-          <p className="mt-2 text-gray-600">{t('schedule_appointment_specialists')}</p>
         </div>
+      </section>
 
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         {/* Progress Steps */}
-        <div className="mb-8">
+        <div className="mb-12">
           <div className="flex items-center justify-center space-x-4">
             {[1, 2, 3, 4].map((stepNumber) => (
               <div key={stepNumber} className="flex items-center">
                 <div
-                  className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
+                  className={`w-12 h-12 rounded-full flex items-center justify-center text-lg font-semibold ${
                     step >= stepNumber
-                      ? 'bg-indigo-600 text-white'
+                      ? 'bg-blue-600 text-white shadow-lg'
                       : 'bg-gray-300 text-gray-600'
                   }`}
                 >
@@ -167,47 +165,52 @@ const BookAppointment = () => {
                 </div>
                 {stepNumber < 4 && (
                   <div
-                    className={`w-16 h-1 mx-2 ${
-                      step > stepNumber ? 'bg-indigo-600' : 'bg-gray-300'
+                    className={`w-20 h-2 mx-4 rounded-full ${
+                      step > stepNumber ? 'bg-blue-600' : 'bg-gray-300'
                     }`}
                   />
                 )}
               </div>
             ))}
           </div>
-          <div className="flex justify-center mt-2">
-            <div className="text-sm text-gray-600">
-              {step === 1 && t('select_specialization_date')}
-              {step === 2 && t('choose_doctor')}
-              {step === 3 && t('select_time_slot')}
-              {step === 4 && t('confirm_booking')}
+          <div className="flex justify-center mt-4">
+            <div className="text-lg font-semibold text-gray-700">
+              {step === 1 && 'Select Specialization & Date'}
+              {step === 2 && 'Choose Your Doctor'}
+              {step === 3 && 'Select Time Slot'}
+              {step === 4 && 'Confirm Booking'}
             </div>
           </div>
         </div>
 
         {/* Error Message */}
         {error && (
-          <div className="mb-6 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-            {error}
+          <div className="mb-8 bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-2xl">
+            <div className="flex items-center">
+              <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+              </svg>
+              {error}
+            </div>
           </div>
         )}
 
         {/* Step 1: Specialization and Date */}
         {step === 1 && (
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-xl font-semibold mb-4">{t('select_specialization_date')}</h2>
+          <div className="bg-white rounded-2xl shadow-xl p-8">
+            <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Select Your Needs</h2>
             
-            <div className="space-y-6">
+            <div className="space-y-8">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  {t('medical_specialization')}
+                <label className="block text-lg font-semibold text-gray-700 mb-4">
+                  Medical Specialization
                 </label>
                 <select
                   value={specialization}
                   onChange={(e) => setSpecialization(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-6 py-4 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
                 >
-                  <option value="">{t('select_specialization')}</option>
+                  <option value="">Choose a specialization</option>
                   {MEDICAL_SPECIALIZATIONS.map((spec) => (
                     <option key={spec} value={spec}>
                       {spec}
@@ -217,8 +220,8 @@ const BookAppointment = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  {t('preferred_date')}
+                <label className="block text-lg font-semibold text-gray-700 mb-4">
+                  Preferred Date
                 </label>
                 <input
                   type="date"
@@ -226,16 +229,16 @@ const BookAppointment = () => {
                   onChange={(e) => setSelectedDate(e.target.value)}
                   min={getMinDate()}
                   max={getMaxDate()}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-6 py-4 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
                 />
               </div>
 
               <button
                 onClick={handleSpecializationSelect}
                 disabled={loading || !specialization || !selectedDate}
-                className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-4 px-8 rounded-xl font-semibold text-lg transition duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
               >
-                {loading ? t('searching') : t('find_available_doctors')}
+                {loading ? 'Searching...' : 'Find Available Doctors'}
               </button>
             </div>
           </div>
@@ -243,55 +246,59 @@ const BookAppointment = () => {
 
         {/* Step 2: Doctor Selection */}
         {step === 2 && (
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold">{t('available_doctors')}</h2>
+          <div className="bg-white rounded-2xl shadow-xl p-8">
+            <div className="flex items-center justify-between mb-8">
+              <h2 className="text-3xl font-bold text-gray-900">Available Doctors</h2>
               <button
                 onClick={() => setStep(1)}
-                className="text-indigo-600 hover:text-indigo-800"
+                className="text-blue-600 hover:text-blue-800 font-semibold text-lg"
               >
-                ← {t('back')}
+                ← Back
               </button>
             </div>
 
-            <div className="mb-4 text-sm text-gray-600">
-              {t('showing_doctors_for')} {specialization} {t('on')} {formatDate(selectedDate)}
+            <div className="mb-6 text-lg text-gray-600">
+              Showing doctors for <span className="font-semibold">{specialization}</span> on <span className="font-semibold">{formatDate(selectedDate)}</span>
             </div>
 
             {doctors.length === 0 ? (
-              <div className="text-center py-8 text-gray-500">
-                {t('no_doctors_available_selected_date')}
+              <div className="text-center py-12 text-gray-500">
+                <svg className="w-16 h-16 mx-auto mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.29-1.009-5.824-2.576" />
+                </svg>
+                <p className="text-xl">No doctors available for the selected date</p>
+                <p className="text-sm mt-2">Please try selecting a different date</p>
               </div>
             ) : (
-              <div className="grid gap-4">
+              <div className="grid gap-6">
                 {doctors.map((doctor) => (
                   <div
                     key={doctor._id}
-                    className="border border-gray-200 rounded-lg p-4 hover:border-indigo-300 cursor-pointer transition-colors"
+                    className="border-2 border-gray-200 rounded-2xl p-6 hover:border-blue-300 cursor-pointer transition duration-300 hover:shadow-lg"
                     onClick={() => handleDoctorSelect(doctor)}
                   >
                     <div className="flex justify-between items-start">
-                      <div>
-                        <h3 className="font-semibold text-lg">
+                      <div className="flex-1">
+                        <h3 className="text-2xl font-bold text-gray-900 mb-2">
                           Dr. {doctor.firstName} {doctor.lastName}
                         </h3>
-                        <p className="text-gray-600">{doctor.specialization}</p>
-                        <p className="text-sm text-gray-500">{doctor.qualification}</p>
-                        <p className="text-sm text-gray-500">
-                          {doctor.experience} {t('years_experience')}
+                        <p className="text-lg text-blue-600 font-semibold mb-2">{doctor.specialization}</p>
+                        <p className="text-gray-600 mb-1">{doctor.qualification}</p>
+                        <p className="text-gray-500">
+                          {doctor.experience} years of experience
                         </p>
+                        <div className="mt-3">
+                          <p className="text-sm text-gray-600">
+                            Available slots: <span className="font-semibold text-blue-600">{doctor.availableSlots.length}</span>
+                          </p>
+                        </div>
                       </div>
                       <div className="text-right">
-                        <p className="font-semibold text-indigo-600">
+                        <p className="text-2xl font-bold text-blue-600">
                           ₹{doctor.consultationFee}
                         </p>
-                        <p className="text-sm text-gray-500">{t('per_consultation')}</p>
+                        <p className="text-sm text-gray-500">per consultation</p>
                       </div>
-                    </div>
-                    <div className="mt-2">
-                      <p className="text-sm text-gray-600">
-                        {t('available_slots')}: {doctor.availableSlots.length}
-                      </p>
                     </div>
                   </div>
                 ))}
@@ -302,30 +309,30 @@ const BookAppointment = () => {
 
         {/* Step 3: Time Selection */}
         {step === 3 && selectedDoctor && (
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold">{t('select_time_slot')}</h2>
+          <div className="bg-white rounded-2xl shadow-xl p-8">
+            <div className="flex items-center justify-between mb-8">
+              <h2 className="text-3xl font-bold text-gray-900">Select Time Slot</h2>
               <button
                 onClick={() => setStep(2)}
-                className="text-indigo-600 hover:text-indigo-800"
+                className="text-blue-600 hover:text-blue-800 font-semibold text-lg"
               >
-                ← {t('back')}
+                ← Back
               </button>
             </div>
 
-            <div className="mb-4">
-              <h3 className="font-semibold">
+            <div className="mb-8 p-6 bg-blue-50 rounded-2xl">
+              <h3 className="text-xl font-bold text-gray-900 mb-2">
                 Dr. {selectedDoctor.firstName} {selectedDoctor.lastName}
               </h3>
-              <p className="text-gray-600">{formatDate(selectedDate)}</p>
+              <p className="text-lg text-gray-600">{formatDate(selectedDate)}</p>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {selectedDoctor.availableSlots.map((time) => (
                 <button
                   key={time}
                   onClick={() => handleTimeSelect(time)}
-                  className="p-3 border border-gray-300 rounded-md hover:border-indigo-500 hover:bg-indigo-50 transition-colors"
+                  className="p-4 border-2 border-gray-300 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition duration-300 font-semibold text-lg"
                 >
                   {time}
                 </button>
@@ -336,49 +343,67 @@ const BookAppointment = () => {
 
         {/* Step 4: Confirmation */}
         {step === 4 && (
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold">{t('confirm_booking')}</h2>
+          <div className="bg-white rounded-2xl shadow-xl p-8">
+            <div className="flex items-center justify-between mb-8">
+              <h2 className="text-3xl font-bold text-gray-900">Confirm Your Booking</h2>
               <button
                 onClick={() => setStep(3)}
-                className="text-indigo-600 hover:text-indigo-800"
+                className="text-blue-600 hover:text-blue-800 font-semibold text-lg"
               >
-                ← {t('back')}
+                ← Back
               </button>
             </div>
 
-            <div className="space-y-4">
-              <div className="border border-gray-200 rounded-lg p-4">
-                <h3 className="font-semibold mb-2">{t('appointment_details')}</h3>
-                <div className="space-y-2 text-sm">
-                  <p><span className="font-medium">{t('doctor')}:</span> Dr. {selectedDoctor.firstName} {selectedDoctor.lastName}</p>
-                  <p><span className="font-medium">{t('specialization')}:</span> {selectedDoctor.specialization}</p>
-                  <p><span className="font-medium">{t('date')}:</span> {formatDate(selectedDate)}</p>
-                  <p><span className="font-medium">{t('time')}:</span> {selectedTime}</p>
-                  <p><span className="font-medium">{t('duration')}:</span> 30 {t('minutes')}</p>
-                  <p><span className="font-medium">{t('fee')}:</span> ₹{selectedDoctor.consultationFee}</p>
+            <div className="space-y-8">
+              <div className="border-2 border-gray-200 rounded-2xl p-6">
+                <h3 className="text-xl font-bold text-gray-900 mb-6">Appointment Details</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-lg">
+                  <div>
+                    <p className="font-semibold text-gray-700">Doctor:</p>
+                    <p className="text-gray-900">Dr. {selectedDoctor.firstName} {selectedDoctor.lastName}</p>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-700">Specialization:</p>
+                    <p className="text-gray-900">{selectedDoctor.specialization}</p>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-700">Date:</p>
+                    <p className="text-gray-900">{formatDate(selectedDate)}</p>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-700">Time:</p>
+                    <p className="text-gray-900">{selectedTime}</p>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-700">Duration:</p>
+                    <p className="text-gray-900">30 minutes</p>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-700">Consultation Fee:</p>
+                    <p className="text-blue-600 font-bold text-xl">₹{selectedDoctor.consultationFee}</p>
+                  </div>
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  {t('describe_symptoms_concerns')}
+                <label className="block text-lg font-semibold text-gray-700 mb-4">
+                  Describe your symptoms or concerns
                 </label>
                 <textarea
                   value={symptoms}
                   onChange={(e) => setSymptoms(e.target.value)}
-                  rows={4}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                  placeholder={t('describe_symptoms_placeholder')}
+                  rows={6}
+                  className="w-full px-6 py-4 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
+                  placeholder="Please describe your symptoms, concerns, or reason for the appointment..."
                 />
               </div>
 
               <button
                 onClick={handleBookAppointment}
                 disabled={loading || !symptoms.trim()}
-                className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white py-4 px-8 rounded-xl font-semibold text-lg transition duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
               >
-                {loading ? t('booking') : t('confirm_book_appointment')}
+                {loading ? 'Booking Appointment...' : 'Confirm & Book Appointment'}
               </button>
             </div>
           </div>

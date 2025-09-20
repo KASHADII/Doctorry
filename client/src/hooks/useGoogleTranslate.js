@@ -25,7 +25,8 @@ export const useGoogleTranslate = () => {
         // Fallback to basic languages
         setSupportedLanguages([
           { code: 'en', name: 'English' },
-          { code: 'hi', name: 'हिंदी' }
+          { code: 'hi', name: 'हिंदी' },
+          { code: 'pa', name: 'ਪੰਜਾਬੀ' }
         ]);
       }
     } catch (error) {
@@ -42,7 +43,7 @@ export const useGoogleTranslate = () => {
 
     try {
       // If it's a predefined language, use i18next
-      if (['en', 'hi'].includes(targetLanguage)) {
+      if (['en', 'hi', 'pa'].includes(targetLanguage)) {
         await i18n.changeLanguage(targetLanguage);
         return;
       }
@@ -128,7 +129,7 @@ export const useGoogleTranslate = () => {
     return {
       code: i18n.language,
       name: currentLang ? currentLang.name : i18n.language.toUpperCase(),
-      isGoogleTranslated: !['en', 'hi'].includes(i18n.language)
+      isGoogleTranslated: !['en', 'hi', 'pa'].includes(i18n.language)
     };
   };
 

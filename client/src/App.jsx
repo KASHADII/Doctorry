@@ -13,6 +13,13 @@ import DoctorDashboard from './components/DoctorDashboard';
 import BookAppointment from './components/BookAppointment';
 import VideoCall from './components/VideoCall';
 import AppointmentsList from './components/AppointmentsList';
+import AboutUs from './components/AboutUs';
+import Pharmacy from './components/Pharmacy';
+import Doctors from './components/Doctors';
+import Contact from './components/Contact';
+import Services from './components/Services';
+import News from './components/News';
+import SingleNews from './components/SingleNews';
 import LanguageSwitcher from './components/LanguageSwitcher';
 import PWAInstallPrompt from './components/PWAInstallPrompt';
 import NotificationPermission from './components/NotificationPermission';
@@ -26,7 +33,7 @@ const ProtectedRoute = ({ children }) => {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
           <p className="text-gray-600">{t('loading')}</p>
         </div>
       </div>
@@ -45,7 +52,7 @@ const PublicRoute = ({ children }) => {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
           <p className="text-gray-600">{t('loading')}</p>
         </div>
       </div>
@@ -66,6 +73,13 @@ function App() {
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={<Home />} />
+            <Route path="/about" element={<AboutUs />} />
+            <Route path="/services" element={<Services />} />
+            <Route path="/pharmacy" element={<Pharmacy />} />
+            <Route path="/doctors" element={<Doctors />} />
+            <Route path="/news" element={<News />} />
+            <Route path="/news/:id" element={<SingleNews />} />
+            <Route path="/contact" element={<Contact />} />
             <Route 
               path="/login" 
               element={

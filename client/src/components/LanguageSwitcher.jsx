@@ -96,7 +96,7 @@ const LanguageSwitcher = () => {
                 {/* Predefined Languages */}
                 <div className="mb-2">
                   <div className="text-xs font-semibold text-gray-700 px-2 py-1">Predefined</div>
-                  {['en', 'hi'].map((lang) => {
+                  {['en', 'hi', 'pa'].map((lang) => {
                     const language = supportedLanguages.find(l => l.code === lang);
                     if (!language) return null;
                     
@@ -125,7 +125,7 @@ const LanguageSwitcher = () => {
                   <div>
                     <div className="text-xs font-semibold text-gray-700 px-2 py-1">More Languages</div>
                     {supportedLanguages
-                      .filter(lang => !['en', 'hi'].includes(lang.code))
+                      .filter(lang => !['en', 'hi', 'pa'].includes(lang.code))
                       .slice(0, 20) // Limit to first 20 for better UX
                       .map((language) => (
                         <button

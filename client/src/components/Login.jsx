@@ -40,7 +40,9 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8" style={{
+      background: 'linear-gradient(to bottom right, var(--color-gray-50), var(--color-white))'
+    }}>
       <div className="max-w-md w-full space-y-8">
         <div className="bg-white rounded-2xl shadow-xl p-8">
           <div className="text-center">
@@ -66,7 +68,19 @@ const Login = () => {
                 required
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg transition duration-200"
+                style={{
+                  focusRingColor: 'var(--color-primary)',
+                  focusBorderColor: 'var(--color-primary)'
+                }}
+                onFocus={(e) => {
+                  e.target.style.borderColor = 'var(--color-primary)';
+                  e.target.style.boxShadow = '0 0 0 1px var(--color-primary)';
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = 'var(--color-gray-300)';
+                  e.target.style.boxShadow = 'none';
+                }}
                 placeholder={t('enter_email')}
               />
             </div>
@@ -82,7 +96,19 @@ const Login = () => {
                 required
                 value={formData.password}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg transition duration-200"
+                style={{
+                  focusRingColor: 'var(--color-primary)',
+                  focusBorderColor: 'var(--color-primary)'
+                }}
+                onFocus={(e) => {
+                  e.target.style.borderColor = 'var(--color-primary)';
+                  e.target.style.boxShadow = '0 0 0 1px var(--color-primary)';
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = 'var(--color-gray-300)';
+                  e.target.style.boxShadow = 'none';
+                }}
                 placeholder={t('enter_password')}
               />
             </div>
@@ -90,7 +116,17 @@ const Login = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full text-white py-3 px-4 rounded-lg font-medium focus:ring-2 focus:ring-offset-2 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              style={{
+                backgroundColor: 'var(--color-primary)',
+                focusRingColor: 'var(--color-primary)'
+              }}
+              onMouseEnter={(e) => {
+                if (!loading) e.target.style.backgroundColor = 'var(--color-primary-dark)';
+              }}
+              onMouseLeave={(e) => {
+                if (!loading) e.target.style.backgroundColor = 'var(--color-primary)';
+              }}
             >
               {loading ? t('signing_in') : t('sign_in')}
             </button>
@@ -101,7 +137,10 @@ const Login = () => {
               {t('dont_have_account')}{' '}
               <Link
                 to="/register"
-                className="text-blue-600 hover:text-blue-700 font-medium transition duration-200"
+                className="font-medium transition duration-200"
+                style={{color: 'var(--color-primary)'}}
+                onMouseEnter={(e) => e.target.style.color = 'var(--color-primary-dark)'}
+                onMouseLeave={(e) => e.target.style.color = 'var(--color-primary)'}
               >
                 {t('sign_up_here')}
               </Link>

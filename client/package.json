@@ -11,6 +11,7 @@
     "start": "vite preview --port 10000 --host"
   },
   "dependencies": {
+    "@googlemaps/js-api-loader": "^1.16.10",
     "@tailwindcss/vite": "^4.1.13",
     "agora-rtc-sdk-ng": "^4.24.0",
     "i18next": "^25.5.2",
