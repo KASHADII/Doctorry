@@ -15,7 +15,10 @@ const Home = () => {
 
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center overflow-hidden" style={{
-        background: 'linear-gradient(to bottom right, var(--color-gray-50), var(--color-white), var(--color-gray-50))'
+        backgroundImage: 'linear-gradient(rgba(39, 97, 126, 0.7), rgba(0, 38, 60, 0.8)), url(/src/assets/Doctor.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center right',
+        backgroundRepeat: 'no-repeat'
       }}>
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-5">
@@ -26,20 +29,15 @@ const Home = () => {
         </div>
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* Left Content */}
-            <div className="text-center lg:text-left">
-              <div className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold mb-6" style={{
-                backgroundColor: 'var(--color-gray-100)',
-                color: 'var(--color-primary)'
-              }}>
-                🏥 Trusted Healthcare Platform
-              </div>
-              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6 leading-tight" style={{color: 'var(--color-gray-900)'}}>
+          <div className="grid grid-cols-1 gap-12 items-center">
+            {/* Content */}
+            <div className="text-center lg:text-left -ml-170">
+              
+              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6 leading-tight text-white">
                 Your Health,
-                <span className="block" style={{color: 'var(--color-primary)'}}>Our Priority</span>
+                <span className="block" style={{color: 'var(--color-accent-lime)'}}>Our Priority</span>
               </h1>
-              <p className="text-xl sm:text-2xl text-gray-600 mb-8 max-w-2xl leading-relaxed">
+              <p className="text-xl sm:text-2xl text-white/90 mb-8 max-w-2xl leading-relaxed">
                 Connect with top-rated doctors, manage your health records, and get personalized care from the comfort of your home.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
@@ -85,47 +83,21 @@ const Home = () => {
               {/* Stats */}
               <div className="grid grid-cols-3 gap-8 mt-12">
                 <div className="text-center lg:text-left">
-                  <div className="text-3xl font-bold" style={{color: 'var(--color-primary)'}}>500+</div>
-                  <div style={{color: 'var(--color-gray-600)'}}>Expert Doctors</div>
+                  <div className="text-3xl font-bold text-white">500+</div>
+                  <div className="text-white/80">Expert Doctors</div>
                 </div>
                 <div className="text-center lg:text-left">
-                  <div className="text-3xl font-bold" style={{color: 'var(--color-accent-teal)'}}>10K+</div>
-                  <div style={{color: 'var(--color-gray-600)'}}>Happy Patients</div>
+                  <div className="text-3xl font-bold text-white">10K+</div>
+                  <div className="text-white/80">Happy Patients</div>
                 </div>
                 <div className="text-center lg:text-left">
-                  <div className="text-3xl font-bold" style={{color: 'var(--color-accent-green)'}}>24/7</div>
-                  <div style={{color: 'var(--color-gray-600)'}}>Support</div>
+                  <div className="text-3xl font-bold text-white">24/7</div>
+                  <div className="text-white/80">Support</div>
                 </div>
               </div>
             </div>
 
-            {/* Right Content - Hero Image/Illustration */}
-            <div className="relative">
-              <div className="rounded-3xl p-8 shadow-2xl" style={{
-                background: 'linear-gradient(to bottom right, var(--color-gray-100), var(--color-gray-50))'
-              }}>
-                <div className="bg-white rounded-2xl p-6 shadow-lg">
-                  <div className="text-center">
-                    <div className="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-4" style={{backgroundColor: 'var(--color-gray-100)'}}>
-                      <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{color: 'var(--color-primary)'}}>
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                      </svg>
-                    </div>
-                    <h3 className="text-xl font-semibold mb-2" style={{color: 'var(--color-gray-900)'}}>Book Appointment</h3>
-                    <p className="mb-4" style={{color: 'var(--color-gray-600)'}}>Schedule your consultation with our expert doctors</p>
-                    <Link
-                      to="/book-appointment"
-                      className="text-white px-6 py-3 rounded-full font-semibold transition duration-300"
-                      style={{backgroundColor: 'var(--color-primary)'}}
-                      onMouseEnter={(e) => e.target.style.backgroundColor = 'var(--color-primary-dark)'}
-                      onMouseLeave={(e) => e.target.style.backgroundColor = 'var(--color-primary)'}
-                    >
-                      Book Now
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </div>
+
           </div>
         </div>
       </section>

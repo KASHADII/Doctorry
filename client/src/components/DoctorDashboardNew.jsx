@@ -324,8 +324,9 @@ const DoctorDashboard = () => {
   };
 
   const canJoinCall = (appointment) => {
-    // Allow immediate call joining for testing - only check status
-    return ['scheduled', 'confirmed'].includes(appointment.status);
+    // Allow joining calls that are scheduled, confirmed, or in-progress
+    // This ensures both doctor and patient can join regardless of who joins first
+    return ['scheduled', 'confirmed', 'in-progress'].includes(appointment.status);
   };
 
   if (loading && !doctor) {

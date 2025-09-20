@@ -27,12 +27,12 @@ const Navbar = () => {
           <div className="flex justify-between items-center h-20">
             
             {/* Logo Section */}
-            <div className="flex items-center">
+            <div className="flex items-center -ml-32 -mt-4">
               <Link to="/" className="flex items-center space-x-3">
                 <img 
                   src={Logo} 
                   alt="Doctorry Logo" 
-                  className="h-40 w-auto contain"
+                  className="h-50 w-50 contain"
                 />
                 
               </Link>
@@ -126,7 +126,7 @@ const Navbar = () => {
               </Link>
             </div>
 
-            {/* Right Section - Search and Appointment */}
+            {/* Right Section - Search and Auth Buttons */}
             <div className="flex items-center space-x-4">
               {/* Search Icon */}
               <button className="text-gray-600 transition duration-200 p-2 rounded-full hover:bg-gray-100" style={{color: 'var(--color-gray-600)'}} onMouseEnter={(e) => e.target.style.color = 'var(--color-primary)'} onMouseLeave={(e) => e.target.style.color = 'var(--color-gray-600)'}>
@@ -135,9 +135,29 @@ const Navbar = () => {
                 </svg>
               </button>
               
-              {/* Appointment Button */}
+              {/* Login Button */}
               <Link
-                to="/book-appointment"
+                to="/login"
+                className="px-6 py-3 rounded-full font-semibold text-lg transition duration-300"
+                style={{
+                  border: '2px solid var(--color-primary)',
+                  color: 'var(--color-primary)'
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.backgroundColor = 'var(--color-primary)';
+                  e.target.style.color = 'var(--color-white)';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.backgroundColor = 'transparent';
+                  e.target.style.color = 'var(--color-primary)';
+                }}
+              >
+                Login
+              </Link>
+              
+              {/* Sign Up Button */}
+              <Link
+                to="/register"
                 className="text-white px-6 py-3 rounded-full font-semibold text-lg transition duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
                 style={{
                   background: 'linear-gradient(to right, var(--color-primary), var(--color-primary-dark))'
@@ -149,7 +169,7 @@ const Navbar = () => {
                   e.target.style.background = 'linear-gradient(to right, var(--color-primary), var(--color-primary-dark))';
                 }}
               >
-                Book Appointment
+                Sign Up
               </Link>
             </div>
 
@@ -269,16 +289,35 @@ const Navbar = () => {
                 >
                   Contact
                 </Link>
-                <div className="px-4 py-3">
+                <div className="px-4 py-3 space-y-3">
                   <Link
-                    to="/book-appointment"
+                    to="/login"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="block w-full px-6 py-3 rounded-full font-semibold text-lg transition duration-300 text-center"
+                    style={{
+                      border: '2px solid var(--color-primary)',
+                      color: 'var(--color-primary)'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.target.style.backgroundColor = 'var(--color-primary)';
+                      e.target.style.color = 'var(--color-white)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.backgroundColor = 'transparent';
+                      e.target.style.color = 'var(--color-primary)';
+                    }}
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    to="/register"
                     onClick={() => setIsMobileMenuOpen(false)}
                     className="block w-full text-white px-6 py-3 rounded-full font-semibold text-lg transition duration-300 text-center shadow-lg"
                     style={{
                       background: 'linear-gradient(to right, var(--color-primary), var(--color-primary-dark))'
                     }}
                   >
-                    Book Appointment
+                    Sign Up
                   </Link>
                 </div>
               </div>

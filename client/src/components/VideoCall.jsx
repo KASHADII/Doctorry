@@ -2,11 +2,13 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import AgoraRTC from 'agora-rtc-sdk-ng';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '../contexts/AuthContext';
 
 const VideoCall = () => {
   const { appointmentId } = useParams();
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const { user } = useAuth();
   
   // Agora configuration - using environment variable
   const APP_ID = import.meta.env.VITE_AGORA_APP_ID || 'ec41c49da5c0442b892490a9bbd037d5';
@@ -21,6 +23,8 @@ const VideoCall = () => {
   const [appointment, setAppointment] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [remoteUserJoined, setRemoteUserJoined] = useState(false);
+  const [isDoctor, setIsDoctor] = useState(false);
   
   // Refs for Agora
   const clientRef = useRef(null);
@@ -42,6 +46,85 @@ const VideoCall = () => {
     };
   }, []);
 
+  // Start timer when both users are connected
+  useEffect(() => {
+    if (isJoined && remoteUserJoined && !durationIntervalRef.current) {
+      startCallTimer();
+      // Update appointment status to in-progress when both participants are connected
+      updateAppointmentStatus('in-progress');
+    } else if ((!isJoined || !remoteUserJoined) && durationIntervalRef.current) {
+      clearInterval(durationIntervalRef.current);
+      durationIntervalRef.current = null;
+    }
+  }, [isJoined, remoteUserJoined]);
+
+  // Debug video elements
+  useEffect(() => {
+    console.log('Video elements debug:', {
+      localVideoRef: !!localVideoRef.current,
+      remoteVideoRef: !!remoteVideoRef.current,
+      isVideoEnabled,
+      remoteUserJoined,
+      isJoined,
+      localVideoTrack: !!localVideoTrackRef.current,
+      localAudioTrack: !!localAudioTrackRef.current
+    });
+    
+    // Check video track status if it exists
+    if (localVideoTrackRef.current) {
+      console.log('Local video track status:', {
+        enabled: localVideoTrackRef.current.enabled,
+        muted: localVideoTrackRef.current.muted,
+        readyState: localVideoTrackRef.current.readyState
+      });
+    }
+    
+    // Retry video playback if not working
+    if (isJoined && localVideoTrackRef.current && localVideoRef.current) {
+      setTimeout(() => {
+        checkAndRetryVideoPlayback();
+      }, 2000);
+    }
+  }, [isVideoEnabled, remoteUserJoined, isJoined]);
+
+  const checkAndRetryVideoPlayback = () => {
+    console.log('Checking video playback...');
+    
+    // Check local video
+    if (localVideoTrackRef.current && localVideoRef.current) {
+      const localElement = localVideoRef.current;
+      const hasVideo = localElement.querySelector('video') || localElement.tagName === 'VIDEO';
+      
+      if (!hasVideo) {
+        console.log('Local video not displaying, retrying...');
+        try {
+          localVideoTrackRef.current.play(localVideoRef.current, {
+            mirror: true,
+            fit: 'cover'
+          });
+          console.log('Local video retry successful');
+        } catch (error) {
+          console.error('Local video retry failed:', error);
+        }
+      } else {
+        console.log('Local video is displaying correctly');
+      }
+    }
+    
+    // Check remote video
+    if (remoteUserJoined && remoteVideoRef.current) {
+      const remoteElement = remoteVideoRef.current;
+      const hasVideo = remoteElement.querySelector('video') || remoteElement.tagName === 'VIDEO';
+      
+      if (!hasVideo) {
+        console.log('Remote video not displaying, checking for tracks...');
+        // This will be handled by the user-published event
+      } else {
+        console.log('Remote video is displaying correctly');
+      }
+    }
+  };
+
   const fetchAppointmentDetails = async () => {
     try {
       const token = localStorage.getItem('token') || localStorage.getItem('doctorToken');
@@ -56,6 +139,29 @@ const VideoCall = () => {
 
       if (response.ok) {
         setAppointment(data.appointment);
+        
+        // Determine if current user is the doctor
+        const doctorToken = localStorage.getItem('doctorToken');
+        const doctorUser = localStorage.getItem('doctorUser');
+        
+        if (doctorToken && doctorUser) {
+          // User is logged in as doctor, check if they are the doctor for this appointment
+          const currentDoctor = JSON.parse(doctorUser);
+          const isCurrentUserDoctor = currentDoctor.id.toString() === data.appointment.doctor._id.toString();
+          setIsDoctor(isCurrentUserDoctor);
+          console.log('Doctor role check:', { 
+            currentDoctorId: currentDoctor.id, 
+            appointmentDoctorId: data.appointment.doctor._id, 
+            isDoctor: isCurrentUserDoctor,
+            doctorToken: !!doctorToken,
+            doctorUser: !!doctorUser
+          });
+        } else {
+          // User is logged in as patient
+          setIsDoctor(false);
+          console.log('User is patient - no doctor token or user data');
+        }
+        
         // Allow immediate call joining for testing - no timing restrictions
       } else {
         setError(data.message);
@@ -79,25 +185,43 @@ const VideoCall = () => {
       clientRef.current.on('user-published', handleUserPublished);
       clientRef.current.on('user-unpublished', handleUserUnpublished);
       clientRef.current.on('user-left', handleUserLeft);
+      clientRef.current.on('user-joined', handleUserJoined);
 
-      // Join the channel
+      // Join the channel with unique UID for same machine testing
+      console.log('Attempting to join channel:', appointment.callRoomId);
+      
+      // Generate unique UID for same machine testing
+      const uniqueUID = isDoctor ? 
+        `doctor_${Date.now()}_${Math.random().toString(36).substr(2, 9)}` : 
+        `patient_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      
+      console.log('Using unique UID:', uniqueUID);
+      
       const uid = await clientRef.current.join(
         APP_ID,
         appointment.callRoomId,
         TOKEN,
-        null
+        uniqueUID
       );
 
       console.log('Joined channel successfully with UID:', uid);
+      console.log('Channel name:', appointment.callRoomId);
+      console.log('APP_ID:', APP_ID);
+
+      // Check if there are already users in the channel
+      const remoteUsers = clientRef.current.remoteUsers;
+      console.log('Remote users already in channel:', remoteUsers.length);
+      if (remoteUsers.length > 0) {
+        console.log('Found existing users in channel, setting remoteUserJoined to true');
+        setRemoteUserJoined(true);
+      }
 
       // Create and publish local tracks
       await createAndPublishTracks();
 
       setIsJoined(true);
-      startCallTimer();
       
-      // Update appointment status to in-progress
-      await updateAppointmentStatus('in-progress');
+      // Don't update status to in-progress yet - wait for both participants
 
     } catch (error) {
       console.error('Failed to join channel:', error);
@@ -107,8 +231,12 @@ const VideoCall = () => {
 
   const createAndPublishTracks = async () => {
     try {
+      console.log('Creating local tracks...');
+      console.log('Current user role - isDoctor:', isDoctor);
+      
       // Create audio track
       localAudioTrackRef.current = await AgoraRTC.createMicrophoneAudioTrack();
+      console.log('Audio track created');
       
       // Create video track with better configuration
       localVideoTrackRef.current = await AgoraRTC.createCameraVideoTrack({
@@ -120,44 +248,90 @@ const VideoCall = () => {
           bitrateMax: 400
         }
       });
+      console.log('Video track created');
       
       // Play local video with better styling
       if (localVideoRef.current) {
-        localVideoTrackRef.current.play(localVideoRef.current, {
-          mirror: true, // Mirror the local video
-          fit: 'cover' // Cover the container
-        });
+        // Add a small delay to ensure the element is ready
+        setTimeout(() => {
+          if (localVideoTrackRef.current && localVideoRef.current) {
+            try {
+              localVideoTrackRef.current.play(localVideoRef.current, {
+                mirror: true, // Mirror the local video
+                fit: 'cover' // Cover the container
+              });
+              console.log('Local video playing successfully');
+              
+              // Additional debugging
+              console.log('Local video element:', localVideoRef.current);
+              console.log('Local video track:', localVideoTrackRef.current);
+              console.log('Video element dimensions:', {
+                width: localVideoRef.current.offsetWidth,
+                height: localVideoRef.current.offsetHeight
+              });
+            } catch (playError) {
+              console.error('Error playing local video:', playError);
+            }
+          }
+        }, 100);
+      } else {
+        console.warn('Local video ref not available');
       }
       
       // Publish tracks
+      console.log('Publishing tracks...');
       await clientRef.current.publish([
         localAudioTrackRef.current,
         localVideoTrackRef.current
       ]);
 
       console.log('Local tracks published successfully');
+      console.log('Video track enabled:', localVideoTrackRef.current.enabled);
+      console.log('Audio track enabled:', localAudioTrackRef.current.enabled);
     } catch (error) {
       console.error('Failed to create or publish tracks:', error);
+      console.error('Error details:', error.message, error.name);
       setError(t('failed_to_initialize_camera_microphone'));
     }
   };
 
   const handleUserPublished = async (user, mediaType) => {
     try {
+      console.log('User published:', user.uid, 'Media type:', mediaType);
       await clientRef.current.subscribe(user, mediaType);
+      
+      // Mark that a remote user has joined
+      setRemoteUserJoined(true);
+      console.log('Remote user joined - setting remoteUserJoined to true');
       
       if (mediaType === 'video') {
         const remoteVideoTrack = user.videoTrack;
         if (remoteVideoRef.current) {
-          remoteVideoTrack.play(remoteVideoRef.current, {
-            fit: 'cover' // Cover the container
-          });
+          try {
+            remoteVideoTrack.play(remoteVideoRef.current, {
+              fit: 'cover' // Cover the container
+            });
+            console.log('Remote video track playing successfully');
+            
+            // Additional debugging
+            console.log('Remote video element:', remoteVideoRef.current);
+            console.log('Remote video track:', remoteVideoTrack);
+            console.log('Remote video element dimensions:', {
+              width: remoteVideoRef.current.offsetWidth,
+              height: remoteVideoRef.current.offsetHeight
+            });
+          } catch (playError) {
+            console.error('Error playing remote video:', playError);
+          }
+        } else {
+          console.warn('Remote video ref not available');
         }
       }
       
       if (mediaType === 'audio') {
         const remoteAudioTrack = user.audioTrack;
         remoteAudioTrack.play();
+        console.log('Remote audio track playing');
       }
     } catch (error) {
       console.error('Failed to subscribe to user:', error);
@@ -171,8 +345,17 @@ const VideoCall = () => {
     }
   };
 
+  const handleUserJoined = (user) => {
+    console.log('User joined channel:', user.uid);
+    // Mark that a remote user has joined the channel
+    setRemoteUserJoined(true);
+    console.log('Remote user joined channel - setting remoteUserJoined to true');
+  };
+
   const handleUserLeft = (user) => {
     console.log('User left:', user.uid);
+    setRemoteUserJoined(false);
+    console.log('Remote user left - setting remoteUserJoined to false');
   };
 
   const toggleMute = async () => {
@@ -276,6 +459,8 @@ const VideoCall = () => {
     try {
       // Check for camera and microphone permissions
       console.log('Requesting camera and microphone permissions...');
+      console.log('Current user role - isDoctor:', isDoctor);
+      
       const stream = await navigator.mediaDevices.getUserMedia({ 
         video: { 
           width: { ideal: 640 },
@@ -286,14 +471,33 @@ const VideoCall = () => {
       });
       
       console.log('Permissions granted, stream created:', stream);
+      console.log('Video tracks:', stream.getVideoTracks().length);
+      console.log('Audio tracks:', stream.getAudioTracks().length);
+      
+      // Check if video track is working
+      const videoTrack = stream.getVideoTracks()[0];
+      if (videoTrack) {
+        console.log('Video track settings:', videoTrack.getSettings());
+        console.log('Video track constraints:', videoTrack.getConstraints());
+        console.log('Video track enabled:', videoTrack.enabled);
+      }
       
       // Stop the test stream
       stream.getTracks().forEach(track => track.stop());
+      console.log('Test stream stopped');
+      
+      // For same machine testing, add a small delay to avoid conflicts
+      if (isDoctor) {
+        console.log('Doctor joining - adding delay to avoid camera conflicts');
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
       
       // Initialize Agora
       await initializeAgora();
     } catch (error) {
       console.error('Permission denied or device error:', error);
+      console.error('Error name:', error.name);
+      console.error('Error message:', error.message);
       if (error.name === 'NotAllowedError') {
         setError(t('camera_microphone_permission_required'));
       } else if (error.name === 'NotFoundError') {
@@ -340,11 +544,29 @@ const VideoCall = () => {
       <div className="min-h-screen bg-gray-900 flex items-center justify-center">
         <div className="text-center text-white max-w-md">
           <h1 className="text-2xl font-bold mb-4">{t('video_call_title')}</h1>
+          
+          {/* Same machine testing warning */}
+          <div className="bg-yellow-600 text-white px-4 py-3 rounded mb-4">
+            <p className="text-sm">
+              <strong>Testing Note:</strong> If testing on same machine, use different browsers or incognito mode for doctor and patient.
+            </p>
+          </div>
+          
           {appointment && (
             <div className="bg-gray-800 p-4 rounded mb-6">
-              <p><strong>{t('doctor')}:</strong> Dr. {appointment.doctor.firstName} {appointment.doctor.lastName}</p>
-              <p><strong>{t('appointment_date')}:</strong> {new Date(appointment.appointmentDate).toLocaleDateString()}</p>
-              <p><strong>{t('appointment_time')}:</strong> {appointment.appointmentTime}</p>
+              {isDoctor ? (
+                <>
+                  <p><strong>{t('patient')}:</strong> {appointment?.patient?.firstName} {appointment?.patient?.lastName}</p>
+                  <p><strong>{t('appointment_date')}:</strong> {new Date(appointment?.appointmentDate).toLocaleDateString()}</p>
+                  <p><strong>{t('appointment_time')}:</strong> {appointment?.appointmentTime}</p>
+                </>
+              ) : (
+                <>
+                  <p><strong>{t('doctor')}:</strong> Dr. {appointment?.doctor?.firstName} {appointment?.doctor?.lastName}</p>
+                  <p><strong>{t('appointment_date')}:</strong> {new Date(appointment?.appointmentDate).toLocaleDateString()}</p>
+                  <p><strong>{t('appointment_time')}:</strong> {appointment?.appointmentTime}</p>
+                </>
+              )}
             </div>
           )}
           <button
@@ -374,10 +596,13 @@ const VideoCall = () => {
           </button>
           <div>
             <h1 className="text-sm font-semibold">
-              Dr. {appointment?.doctor.firstName} {appointment?.doctor.lastName}
+              {isDoctor 
+                ? `${appointment?.patient?.firstName} ${appointment?.patient?.lastName}`
+                : `Dr. ${appointment?.doctor?.firstName} ${appointment?.doctor?.lastName}`
+              }
             </h1>
             <p className="text-xs text-gray-400">
-              {appointment?.specialization} • {formatDuration(callDuration)}
+              {isDoctor ? t('patient') : appointment?.doctor?.specialization} • {formatDuration(callDuration)}
             </p>
           </div>
         </div>
@@ -393,20 +618,28 @@ const VideoCall = () => {
         <div className="absolute inset-0 bg-gray-800">
           <div 
             ref={remoteVideoRef}
-            className="w-full h-full object-cover"
-            style={{ minHeight: '100%' }}
+            className={`w-full h-full object-cover ${remoteUserJoined ? 'block' : 'hidden'}`}
+            style={{ minHeight: '100%', backgroundColor: '#1f2937' }}
           />
-          {/* No video placeholder */}
-          <div className="absolute inset-0 flex items-center justify-center bg-gray-800">
-            <div className="text-center">
-              <div className="w-16 h-16 bg-gray-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
-                </svg>
+          {/* No video placeholder - only show when no remote user */}
+          {!remoteUserJoined && (
+            <div className="absolute inset-0 flex items-center justify-center bg-gray-800">
+              <div className="text-center">
+                <div className="w-16 h-16 bg-gray-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-8 h-8 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <p className="text-gray-400 text-sm">
+                  {isDoctor ? t('waiting_for_patient') : t('waiting_for_doctor')}
+                  {/* Debug info */}
+                  <span className="block text-xs text-gray-500 mt-1">
+                    Debug: isDoctor={isDoctor ? 'true' : 'false'}, remoteJoined={remoteUserJoined ? 'true' : 'false'}
+                  </span>
+                </p>
               </div>
-              <p className="text-gray-400 text-sm">{t('waiting_for_doctor')}</p>
             </div>
-          </div>
+          )}
         </div>
 
         {/* Local Video - Picture-in-Picture */}
@@ -414,23 +647,36 @@ const VideoCall = () => {
           <div 
             ref={localVideoRef}
             className="w-full h-full object-cover"
+            style={{ backgroundColor: '#374151' }}
           />
-          {/* Local video placeholder */}
-          <div className="absolute inset-0 flex items-center justify-center bg-gray-700">
-            <div className="text-center">
-              <div className="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center mx-auto mb-1">
-                <svg className="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
-                </svg>
+          {/* Local video placeholder - only show when no local video */}
+          {!isVideoEnabled && (
+            <div className="absolute inset-0 flex items-center justify-center bg-gray-700">
+              <div className="text-center">
+                <div className="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center mx-auto mb-1">
+                  <svg className="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <p className="text-gray-400 text-xs">{t('you')}</p>
               </div>
-              <p className="text-gray-400 text-xs">{t('you')}</p>
             </div>
-          </div>
+          )}
         </div>
 
         {/* Connection Status */}
         <div className="absolute top-4 left-4 bg-black bg-opacity-50 px-3 py-1 rounded-full">
           <span className="text-xs text-white">{t('connected')}</span>
+        </div>
+        
+        {/* Debug retry button */}
+        <div className="absolute top-4 left-20 bg-blue-600 bg-opacity-50 px-3 py-1 rounded-full">
+          <button 
+            onClick={checkAndRetryVideoPlayback}
+            className="text-xs text-white hover:bg-opacity-70"
+          >
+            Retry Video
+          </button>
         </div>
       </div>
 

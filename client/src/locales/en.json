@@ -375,6 +375,7 @@
   "failed_to_access_camera_microphone": "Failed to access camera and microphone. Please check your device settings.",
   "loading_appointment_details": "Loading appointment details...",
   "waiting_for_doctor": "Waiting for doctor...",
+  "waiting_for_patient": "Waiting for patient...",
   "you": "You",
   "connected": "Connected",
   "live": "Live",
