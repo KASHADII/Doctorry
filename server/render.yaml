@@ -1,0 +1,12 @@
+# Render deployment configuration for backend
+# This file helps Render understand how to build and run your Node.js app
+
+# Build command (if needed)
+# build: npm install
+
+# Start command
+# start: npm start
+
+# Environment
+# NODE_ENV=production
+# PORT=10000

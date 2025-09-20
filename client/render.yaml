@@ -1,0 +1,12 @@
+# Render deployment configuration for frontend
+# This file helps Render understand how to build and run your React app
+
+# Build command
+# build: npm run build
+
+# Start command  
+# start: npm run start
+
+# Environment
+# NODE_ENV=production
+# PORT=10000
