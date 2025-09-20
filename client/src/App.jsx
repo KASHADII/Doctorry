@@ -14,17 +14,20 @@ import BookAppointment from './components/BookAppointment';
 import VideoCall from './components/VideoCall';
 import AppointmentsList from './components/AppointmentsList';
 import LanguageSwitcher from './components/LanguageSwitcher';
+import PWAInstallPrompt from './components/PWAInstallPrompt';
+import NotificationPermission from './components/NotificationPermission';
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
+  const { t } = useTranslation();
   
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
+          <p className="text-gray-600">{t('loading')}</p>
         </div>
       </div>
     );
@@ -36,13 +39,14 @@ const ProtectedRoute = ({ children }) => {
 // Public Route Component (redirects to dashboard if already authenticated)
 const PublicRoute = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
+  const { t } = useTranslation();
   
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
+          <p className="text-gray-600">{t('loading')}</p>
         </div>
       </div>
     );
@@ -57,6 +61,8 @@ function App() {
       <Router>
         <div className="App">
           <LanguageSwitcher />
+          <PWAInstallPrompt />
+          <NotificationPermission />
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={<Home />} />

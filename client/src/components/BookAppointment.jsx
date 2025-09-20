@@ -29,7 +29,7 @@ const BookAppointment = () => {
 
   const handleSpecializationSelect = async () => {
     if (!specialization || !selectedDate) {
-      setError('Please select both specialization and date');
+      setError(t('please_select_specialization_date'));
       return;
     }
 
@@ -56,7 +56,7 @@ const BookAppointment = () => {
         setError(data.message);
       }
     } catch (error) {
-      setError('Network error. Please try again.');
+      setError(t('network_error_try_again'));
     } finally {
       setLoading(false);
     }
@@ -74,7 +74,7 @@ const BookAppointment = () => {
 
   const handleBookAppointment = async () => {
     if (!selectedDoctor || !selectedTime || !symptoms.trim()) {
-      setError('Please fill in all required fields');
+      setError(t('please_fill_all_required_fields'));
       return;
     }
 
@@ -101,12 +101,12 @@ const BookAppointment = () => {
 
       if (response.ok) {
         // Navigate to appointment confirmation or dashboard
-        navigate('/appointments', { state: { success: 'Appointment booked successfully!' } });
+        navigate('/appointments', { state: { success: t('appointment_booked_successfully') } });
       } else {
         setError(data.message);
       }
     } catch (error) {
-      setError('Network error. Please try again.');
+      setError(t('network_error_try_again'));
     } finally {
       setLoading(false);
     }
@@ -177,10 +177,10 @@ const BookAppointment = () => {
           </div>
           <div className="flex justify-center mt-2">
             <div className="text-sm text-gray-600">
-              {step === 1 && 'Select Specialization & Date'}
-              {step === 2 && 'Choose Doctor'}
-              {step === 3 && 'Select Time Slot'}
-              {step === 4 && 'Confirm Booking'}
+              {step === 1 && t('select_specialization_date')}
+              {step === 2 && t('choose_doctor')}
+              {step === 3 && t('select_time_slot')}
+              {step === 4 && t('confirm_booking')}
             </div>
           </div>
         </div>
@@ -195,19 +195,19 @@ const BookAppointment = () => {
         {/* Step 1: Specialization and Date */}
         {step === 1 && (
           <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-xl font-semibold mb-4">Select Specialization & Date</h2>
+            <h2 className="text-xl font-semibold mb-4">{t('select_specialization_date')}</h2>
             
             <div className="space-y-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Medical Specialization
+                  {t('medical_specialization')}
                 </label>
                 <select
                   value={specialization}
                   onChange={(e) => setSpecialization(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 >
-                  <option value="">Select a specialization</option>
+                  <option value="">{t('select_specialization')}</option>
                   {MEDICAL_SPECIALIZATIONS.map((spec) => (
                     <option key={spec} value={spec}>
                       {spec}
@@ -218,7 +218,7 @@ const BookAppointment = () => {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Preferred Date
+                  {t('preferred_date')}
                 </label>
                 <input
                   type="date"
@@ -235,7 +235,7 @@ const BookAppointment = () => {
                 disabled={loading || !specialization || !selectedDate}
                 className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {loading ? 'Searching...' : 'Find Available Doctors'}
+                {loading ? t('searching') : t('find_available_doctors')}
               </button>
             </div>
           </div>
@@ -245,22 +245,22 @@ const BookAppointment = () => {
         {step === 2 && (
           <div className="bg-white rounded-lg shadow-md p-6">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold">Available Doctors</h2>
+              <h2 className="text-xl font-semibold">{t('available_doctors')}</h2>
               <button
                 onClick={() => setStep(1)}
                 className="text-indigo-600 hover:text-indigo-800"
               >
-                ← Back
+                ← {t('back')}
               </button>
             </div>
 
             <div className="mb-4 text-sm text-gray-600">
-              Showing doctors for {specialization} on {formatDate(selectedDate)}
+              {t('showing_doctors_for')} {specialization} {t('on')} {formatDate(selectedDate)}
             </div>
 
             {doctors.length === 0 ? (
               <div className="text-center py-8 text-gray-500">
-                No doctors available for the selected date. Please try another date.
+                {t('no_doctors_available_selected_date')}
               </div>
             ) : (
               <div className="grid gap-4">
@@ -278,19 +278,19 @@ const BookAppointment = () => {
                         <p className="text-gray-600">{doctor.specialization}</p>
                         <p className="text-sm text-gray-500">{doctor.qualification}</p>
                         <p className="text-sm text-gray-500">
-                          {doctor.experience} years experience
+                          {doctor.experience} {t('years_experience')}
                         </p>
                       </div>
                       <div className="text-right">
                         <p className="font-semibold text-indigo-600">
                           ₹{doctor.consultationFee}
                         </p>
-                        <p className="text-sm text-gray-500">per consultation</p>
+                        <p className="text-sm text-gray-500">{t('per_consultation')}</p>
                       </div>
                     </div>
                     <div className="mt-2">
                       <p className="text-sm text-gray-600">
-                        Available slots: {doctor.availableSlots.length}
+                        {t('available_slots')}: {doctor.availableSlots.length}
                       </p>
                     </div>
                   </div>
@@ -304,12 +304,12 @@ const BookAppointment = () => {
         {step === 3 && selectedDoctor && (
           <div className="bg-white rounded-lg shadow-md p-6">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold">Select Time Slot</h2>
+              <h2 className="text-xl font-semibold">{t('select_time_slot')}</h2>
               <button
                 onClick={() => setStep(2)}
                 className="text-indigo-600 hover:text-indigo-800"
               >
-                ← Back
+                ← {t('back')}
               </button>
             </div>
 
@@ -338,38 +338,38 @@ const BookAppointment = () => {
         {step === 4 && (
           <div className="bg-white rounded-lg shadow-md p-6">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold">Confirm Booking</h2>
+              <h2 className="text-xl font-semibold">{t('confirm_booking')}</h2>
               <button
                 onClick={() => setStep(3)}
                 className="text-indigo-600 hover:text-indigo-800"
               >
-                ← Back
+                ← {t('back')}
               </button>
             </div>
 
             <div className="space-y-4">
               <div className="border border-gray-200 rounded-lg p-4">
-                <h3 className="font-semibold mb-2">Appointment Details</h3>
+                <h3 className="font-semibold mb-2">{t('appointment_details')}</h3>
                 <div className="space-y-2 text-sm">
-                  <p><span className="font-medium">Doctor:</span> Dr. {selectedDoctor.firstName} {selectedDoctor.lastName}</p>
-                  <p><span className="font-medium">Specialization:</span> {selectedDoctor.specialization}</p>
-                  <p><span className="font-medium">Date:</span> {formatDate(selectedDate)}</p>
-                  <p><span className="font-medium">Time:</span> {selectedTime}</p>
-                  <p><span className="font-medium">Duration:</span> 30 minutes</p>
-                  <p><span className="font-medium">Fee:</span> ₹{selectedDoctor.consultationFee}</p>
+                  <p><span className="font-medium">{t('doctor')}:</span> Dr. {selectedDoctor.firstName} {selectedDoctor.lastName}</p>
+                  <p><span className="font-medium">{t('specialization')}:</span> {selectedDoctor.specialization}</p>
+                  <p><span className="font-medium">{t('date')}:</span> {formatDate(selectedDate)}</p>
+                  <p><span className="font-medium">{t('time')}:</span> {selectedTime}</p>
+                  <p><span className="font-medium">{t('duration')}:</span> 30 {t('minutes')}</p>
+                  <p><span className="font-medium">{t('fee')}:</span> ₹{selectedDoctor.consultationFee}</p>
                 </div>
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Describe your symptoms or concerns
+                  {t('describe_symptoms_concerns')}
                 </label>
                 <textarea
                   value={symptoms}
                   onChange={(e) => setSymptoms(e.target.value)}
                   rows={4}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                  placeholder="Please describe your symptoms, concerns, or reason for consultation..."
+                  placeholder={t('describe_symptoms_placeholder')}
                 />
               </div>
 
@@ -378,7 +378,7 @@ const BookAppointment = () => {
                 disabled={loading || !symptoms.trim()}
                 className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {loading ? 'Booking...' : 'Confirm & Book Appointment'}
+                {loading ? t('booking') : t('confirm_book_appointment')}
               </button>
             </div>
           </div>

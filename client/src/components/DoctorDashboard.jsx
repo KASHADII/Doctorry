@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MEDICAL_SPECIALIZATIONS, APPOINTMENT_STATUS } from '../constants/medicalConstants';
+import { useTranslation } from 'react-i18next';
 
 const DoctorDashboard = () => {
   const [doctor, setDoctor] = useState(null);
@@ -21,6 +22,7 @@ const DoctorDashboard = () => {
     availableSlots: []
   });
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   useEffect(() => {
     const token = localStorage.getItem('doctorToken');
@@ -59,10 +61,10 @@ const DoctorDashboard = () => {
           availableSlots: data.doctor.availableSlots || []
         });
       } else {
-        setError('Failed to fetch profile');
+        setError(t('failed_to_fetch_profile'));
       }
     } catch (error) {
-      setError('Network error');
+      setError(t('network_error'));
     } finally {
       setLoading(false);
     }
@@ -82,10 +84,10 @@ const DoctorDashboard = () => {
         const data = await response.json();
         setAppointments(data.appointments);
       } else {
-        setError('Failed to fetch appointments');
+        setError(t('failed_to_fetch_appointments'));
       }
     } catch (error) {
-      setError('Network error');
+      setError(t('network_error'));
     }
   };
 
@@ -106,13 +108,13 @@ const DoctorDashboard = () => {
       });
 
       if (response.ok) {
-        setSuccess('Appointment status updated successfully');
+        setSuccess(t('appointment_status_updated_successfully'));
         fetchAppointments();
       } else {
-        setError('Failed to update appointment status');
+        setError(t('failed_to_update_appointment_status'));
       }
     } catch (error) {
-      setError('Network error');
+      setError(t('network_error'));
     }
   };
 
@@ -162,14 +164,14 @@ const DoctorDashboard = () => {
       const data = await response.json();
 
       if (response.ok) {
-        setSuccess('Profile updated successfully!');
+        setSuccess(t('profile_updated_successfully'));
         setDoctor(data.doctor);
         setShowProfileForm(false);
       } else {
         setError(data.message);
       }
     } catch (error) {
-      setError('Network error');
+      setError(t('network_error'));
     } finally {
       setLoading(false);
     }
@@ -179,12 +181,12 @@ const DoctorDashboard = () => {
     e.preventDefault();
     
     if (passwordData.newPassword !== passwordData.confirmPassword) {
-      setError('New passwords do not match');
+      setError(t('passwords_dont_match'));
       return;
     }
 
     if (passwordData.newPassword.length < 6) {
-      setError('New password must be at least 6 characters long');
+      setError(t('password_min_length'));
       return;
     }
 
@@ -209,7 +211,7 @@ const DoctorDashboard = () => {
       const data = await response.json();
 
       if (response.ok) {
-        setSuccess('Password changed successfully!');
+        setSuccess(t('password_changed_successfully'));
         setPasswordData({
           currentPassword: '',
           newPassword: '',
@@ -220,7 +222,7 @@ const DoctorDashboard = () => {
         setError(data.message);
       }
     } catch (error) {
-      setError('Network error');
+      setError(t('network_error'));
     } finally {
       setLoading(false);
     }
@@ -249,14 +251,14 @@ const DoctorDashboard = () => {
       const data = await response.json();
 
       if (response.ok) {
-        setSuccess('Availability updated successfully!');
+        setSuccess(t('availability_updated_successfully'));
         setDoctor(data.doctor);
         setShowAvailabilityForm(false);
       } else {
         setError(data.message);
       }
     } catch (error) {
-      setError('Network error');
+      setError(t('network_error'));
     } finally {
       setLoading(false);
     }
@@ -333,7 +335,7 @@ const DoctorDashboard = () => {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading doctor profile...</p>
+          <p className="text-gray-600">{t('loading_doctor_profile')}</p>
         </div>
       </div>
     );
@@ -346,32 +348,32 @@ const DoctorDashboard = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex items-center">
-              <h1 className="text-xl font-semibold text-gray-900">Doctor Dashboard</h1>
+              <h1 className="text-xl font-semibold text-gray-900">{t('doctor_dashboard')}</h1>
             </div>
             <div className="flex items-center space-x-4">
               <button
                 onClick={() => setShowProfileForm(true)}
                 className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"
               >
-                Edit Profile
+{t('edit_profile')}
               </button>
               <button
                 onClick={() => setShowPasswordForm(true)}
                 className="bg-yellow-600 text-white px-4 py-2 rounded-md hover:bg-yellow-700"
               >
-                Change Password
+{t('change_password')}
               </button>
               <button
                 onClick={() => setShowAvailabilityForm(true)}
                 className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700"
               >
-                Manage Availability
+{t('manage_availability')}
               </button>
               <button
                 onClick={logout}
                 className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700"
               >
-                Logout
+{t('logout')}
               </button>
             </div>
           </div>
@@ -403,7 +405,7 @@ const DoctorDashboard = () => {
                 </div>
                 <div className="ml-5 w-0 flex-1">
                   <dl>
-                    <dt className="text-sm font-medium text-gray-500 truncate">Total Appointments</dt>
+                    <dt className="text-sm font-medium text-gray-500 truncate">{t('total_appointments')}</dt>
                     <dd className="text-lg font-medium text-gray-900">{appointments.length}</dd>
                   </dl>
                 </div>
@@ -421,7 +423,7 @@ const DoctorDashboard = () => {
                 </div>
                 <div className="ml-5 w-0 flex-1">
                   <dl>
-                    <dt className="text-sm font-medium text-gray-500 truncate">Completed</dt>
+                    <dt className="text-sm font-medium text-gray-500 truncate">{t('completed')}</dt>
                     <dd className="text-lg font-medium text-gray-900">
                       {appointments.filter(apt => apt.status === 'completed').length}
                     </dd>
@@ -441,7 +443,7 @@ const DoctorDashboard = () => {
                 </div>
                 <div className="ml-5 w-0 flex-1">
                   <dl>
-                    <dt className="text-sm font-medium text-gray-500 truncate">Scheduled</dt>
+                    <dt className="text-sm font-medium text-gray-500 truncate">{t('scheduled')}</dt>
                     <dd className="text-lg font-medium text-gray-900">
                       {appointments.filter(apt => ['scheduled', 'confirmed'].includes(apt.status)).length}
                     </dd>
@@ -461,7 +463,7 @@ const DoctorDashboard = () => {
                 </div>
                 <div className="ml-5 w-0 flex-1">
                   <dl>
-                    <dt className="text-sm font-medium text-gray-500 truncate">Consultation Fee</dt>
+                    <dt className="text-sm font-medium text-gray-500 truncate">{t('consultation_fee')}</dt>
                     <dd className="text-lg font-medium text-gray-900">₹{doctor?.consultationFee}</dd>
                   </dl>
                 </div>
@@ -474,65 +476,65 @@ const DoctorDashboard = () => {
         <div className="bg-white shadow overflow-hidden sm:rounded-lg mb-8">
           <div className="px-4 py-5 sm:px-6">
             <h3 className="text-lg leading-6 font-medium text-gray-900">
-              Doctor Profile
+              {t('doctor_profile')}
             </h3>
             <p className="mt-1 max-w-2xl text-sm text-gray-500">
-              Your professional information and account details.
+              {t('professional_information_account_details')}
             </p>
           </div>
           <div className="border-t border-gray-200">
             <dl>
               <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                <dt className="text-sm font-medium text-gray-500">Doctor ID</dt>
+                <dt className="text-sm font-medium text-gray-500">{t('doctor_id')}</dt>
                 <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                   {doctor?.doctorId}
                 </dd>
               </div>
               <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                <dt className="text-sm font-medium text-gray-500">Full name</dt>
+                <dt className="text-sm font-medium text-gray-500">{t('full_name')}</dt>
                 <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                   {doctor?.firstName} {doctor?.lastName}
                 </dd>
               </div>
               <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                <dt className="text-sm font-medium text-gray-500">Specialization</dt>
+                <dt className="text-sm font-medium text-gray-500">{t('specialization')}</dt>
                 <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                   {doctor?.specialization}
                 </dd>
               </div>
               <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                <dt className="text-sm font-medium text-gray-500">Qualification</dt>
+                <dt className="text-sm font-medium text-gray-500">{t('qualification')}</dt>
                 <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                   {doctor?.qualification}
                 </dd>
               </div>
               <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                <dt className="text-sm font-medium text-gray-500">Experience</dt>
+                <dt className="text-sm font-medium text-gray-500">{t('experience')}</dt>
                 <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                   {doctor?.experience} years
                 </dd>
               </div>
               <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                <dt className="text-sm font-medium text-gray-500">Phone number</dt>
+                <dt className="text-sm font-medium text-gray-500">{t('phone_number')}</dt>
                 <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                   {doctor?.phoneNumber}
                 </dd>
               </div>
               <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                <dt className="text-sm font-medium text-gray-500">Consultation Fee</dt>
+                <dt className="text-sm font-medium text-gray-500">{t('consultation_fee')}</dt>
                 <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                   ₹{doctor?.consultationFee}
                 </dd>
               </div>
               <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                <dt className="text-sm font-medium text-gray-500">Status</dt>
+                <dt className="text-sm font-medium text-gray-500">{t('status')}</dt>
                 <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                   <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
                     doctor?.isActive 
                       ? 'bg-green-100 text-green-800' 
                       : 'bg-red-100 text-red-800'
                   }`}>
-                    {doctor?.isActive ? 'Active' : 'Inactive'}
+                    {doctor?.isActive ? t('active') : t('inactive')}
                   </span>
                 </dd>
               </div>
@@ -544,16 +546,16 @@ const DoctorDashboard = () => {
         <div className="bg-white shadow overflow-hidden sm:rounded-lg">
           <div className="px-4 py-5 sm:px-6">
             <h3 className="text-lg leading-6 font-medium text-gray-900">
-              Patient Appointments
+              {t('patient_appointments')}
             </h3>
             <p className="mt-1 max-w-2xl text-sm text-gray-500">
-              Manage your scheduled consultations.
+              {t('manage_scheduled_consultations')}
             </p>
           </div>
           <div className="border-t border-gray-200">
             {appointments.length === 0 ? (
               <div className="text-center py-8">
-                <p className="text-gray-500">No appointments scheduled yet.</p>
+                <p className="text-gray-500">{t('no_appointments_scheduled_yet')}</p>
               </div>
             ) : (
               <div className="overflow-x-auto">
@@ -561,19 +563,19 @@ const DoctorDashboard = () => {
                   <thead className="bg-gray-50">
                     <tr>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Patient
+                        {t('patient')}
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Date & Time
+                        {t('date_time')}
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Symptoms
+                        {t('symptoms')}
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Status
+                        {t('status')}
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Actions
+                        {t('actions')}
                       </th>
                     </tr>
                   </thead>
@@ -589,7 +591,7 @@ const DoctorDashboard = () => {
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-900">
                           <div className="max-w-xs truncate">
-                            {appointment.symptoms || 'No symptoms provided'}
+                            {appointment.symptoms || t('no_symptoms_provided')}
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
@@ -603,7 +605,7 @@ const DoctorDashboard = () => {
                               onClick={() => handleJoinCall(appointment)}
                               className="text-green-600 hover:text-green-900"
                             >
-                              Join Call
+                              {t('join_call')}
                             </button>
                           )}
                           {['scheduled', 'confirmed'].includes(appointment.status) && (
@@ -611,7 +613,7 @@ const DoctorDashboard = () => {
                               onClick={() => handleUpdateAppointmentStatus(appointment._id, 'completed')}
                               className="text-blue-600 hover:text-blue-900"
                             >
-                              Mark Complete
+                              {t('mark_complete')}
                             </button>
                           )}
                         </td>
@@ -630,13 +632,13 @@ const DoctorDashboard = () => {
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
           <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
             <div className="mt-3">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Edit Profile</h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-4">{t('edit_profile')}</h3>
               <form onSubmit={handleProfileSubmit} className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <input
                     type="text"
                     name="firstName"
-                    placeholder="First Name"
+                    placeholder={t('first_name')}
                     required
                     value={profileData.firstName}
                     onChange={handleProfileChange}
@@ -645,7 +647,7 @@ const DoctorDashboard = () => {
                   <input
                     type="text"
                     name="lastName"
-                    placeholder="Last Name"
+                    placeholder={t('last_name')}
                     required
                     value={profileData.lastName}
                     onChange={handleProfileChange}
@@ -659,7 +661,7 @@ const DoctorDashboard = () => {
                   onChange={handleProfileChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 >
-                  <option value="">Select Specialization</option>
+                  <option value="">{t('select_specialization')}</option>
                   {MEDICAL_SPECIALIZATIONS.map((spec) => (
                     <option key={spec} value={spec}>{spec}</option>
                   ))}
@@ -667,7 +669,7 @@ const DoctorDashboard = () => {
                 <input
                   type="text"
                   name="qualification"
-                  placeholder="Qualification"
+                  placeholder={t('qualification')}
                   required
                   value={profileData.qualification}
                   onChange={handleProfileChange}
@@ -677,7 +679,7 @@ const DoctorDashboard = () => {
                   <input
                     type="number"
                     name="experience"
-                    placeholder="Experience (years)"
+                    placeholder={t('experience_years')}
                     required
                     value={profileData.experience}
                     onChange={handleProfileChange}
@@ -686,7 +688,7 @@ const DoctorDashboard = () => {
                   <input
                     type="number"
                     name="consultationFee"
-                    placeholder="Consultation Fee"
+                    placeholder={t('consultation_fee')}
                     required
                     value={profileData.consultationFee}
                     onChange={handleProfileChange}
@@ -696,7 +698,7 @@ const DoctorDashboard = () => {
                 <input
                   type="tel"
                   name="phoneNumber"
-                  placeholder="Phone Number"
+                  placeholder={t('phone_number')}
                   required
                   value={profileData.phoneNumber}
                   onChange={handleProfileChange}
@@ -708,14 +710,14 @@ const DoctorDashboard = () => {
                     onClick={() => setShowProfileForm(false)}
                     className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300"
                   >
-                    Cancel
+                    {t('cancel')}
                   </button>
                   <button
                     type="submit"
                     disabled={loading}
                     className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 disabled:opacity-50"
                   >
-                    {loading ? 'Updating...' : 'Update Profile'}
+                    {loading ? t('updating') : t('update_profile')}
                   </button>
                 </div>
               </form>
@@ -729,12 +731,12 @@ const DoctorDashboard = () => {
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
           <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
             <div className="mt-3">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Change Password</h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-4">{t('change_password')}</h3>
               <form onSubmit={handlePasswordSubmit} className="space-y-4">
                 <input
                   type="password"
                   name="currentPassword"
-                  placeholder="Current Password"
+                  placeholder={t('current_password')}
                   required
                   value={passwordData.currentPassword}
                   onChange={handlePasswordChange}
@@ -743,7 +745,7 @@ const DoctorDashboard = () => {
                 <input
                   type="password"
                   name="newPassword"
-                  placeholder="New Password"
+                  placeholder={t('new_password')}
                   required
                   value={passwordData.newPassword}
                   onChange={handlePasswordChange}
@@ -752,7 +754,7 @@ const DoctorDashboard = () => {
                 <input
                   type="password"
                   name="confirmPassword"
-                  placeholder="Confirm New Password"
+                  placeholder={t('confirm_new_password')}
                   required
                   value={passwordData.confirmPassword}
                   onChange={handlePasswordChange}
@@ -764,14 +766,14 @@ const DoctorDashboard = () => {
                     onClick={() => setShowPasswordForm(false)}
                     className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300"
                   >
-                    Cancel
+                    {t('cancel')}
                   </button>
                   <button
                     type="submit"
                     disabled={loading}
                     className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 disabled:opacity-50"
                   >
-                    {loading ? 'Changing...' : 'Change Password'}
+                    {loading ? t('changing') : t('change_password')}
                   </button>
                 </div>
               </form>
@@ -785,7 +787,7 @@ const DoctorDashboard = () => {
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
           <div className="relative top-20 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-md bg-white">
             <div className="mt-3">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Manage Availability</h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-4">{t('manage_availability')}</h3>
               <form onSubmit={handleAvailabilitySubmit} className="space-y-4">
                 <div className="space-y-4">
                   {availabilityData.availableSlots.map((slot, index) => (
@@ -795,13 +797,13 @@ const DoctorDashboard = () => {
                         onChange={(e) => updateAvailabilitySlot(index, 'day', e.target.value)}
                         className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                       >
-                        <option value="monday">Monday</option>
-                        <option value="tuesday">Tuesday</option>
-                        <option value="wednesday">Wednesday</option>
-                        <option value="thursday">Thursday</option>
-                        <option value="friday">Friday</option>
-                        <option value="saturday">Saturday</option>
-                        <option value="sunday">Sunday</option>
+                        <option value="monday">{t('monday')}</option>
+                        <option value="tuesday">{t('tuesday')}</option>
+                        <option value="wednesday">{t('wednesday')}</option>
+                        <option value="thursday">{t('thursday')}</option>
+                        <option value="friday">{t('friday')}</option>
+                        <option value="saturday">{t('saturday')}</option>
+                        <option value="sunday">{t('sunday')}</option>
                       </select>
                       <input
                         type="time"
@@ -809,7 +811,7 @@ const DoctorDashboard = () => {
                         onChange={(e) => updateAvailabilitySlot(index, 'startTime', e.target.value)}
                         className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                       />
-                      <span className="text-gray-500">to</span>
+                      <span className="text-gray-500">{t('to')}</span>
                       <input
                         type="time"
                         value={slot.endTime}
@@ -823,14 +825,14 @@ const DoctorDashboard = () => {
                           onChange={(e) => updateAvailabilitySlot(index, 'isAvailable', e.target.checked)}
                           className="mr-2"
                         />
-                        Available
+                        {t('available')}
                       </label>
                       <button
                         type="button"
                         onClick={() => removeAvailabilitySlot(index)}
                         className="text-red-600 hover:text-red-800"
                       >
-                        Remove
+                        {t('remove')}
                       </button>
                     </div>
                   ))}
@@ -840,7 +842,7 @@ const DoctorDashboard = () => {
                   onClick={addAvailabilitySlot}
                   className="w-full px-4 py-2 text-sm font-medium text-indigo-600 bg-indigo-50 rounded-md hover:bg-indigo-100"
                 >
-                  Add Time Slot
+                  {t('add_time_slot')}
                 </button>
                 <div className="flex justify-end space-x-3">
                   <button
@@ -848,14 +850,14 @@ const DoctorDashboard = () => {
                     onClick={() => setShowAvailabilityForm(false)}
                     className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300"
                   >
-                    Cancel
+                    {t('cancel')}
                   </button>
                   <button
                     type="submit"
                     disabled={loading}
                     className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 disabled:opacity-50"
                   >
-                    {loading ? 'Updating...' : 'Update Availability'}
+                    {loading ? t('updating') : t('update_availability')}
                   </button>
                 </div>
               </form>

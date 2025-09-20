@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -18,6 +19,7 @@ const Register = () => {
   
   const { register } = useAuth();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const handleChange = (e) => {
     setFormData({
@@ -34,13 +36,13 @@ const Register = () => {
 
     // Validation
     if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
+      setError(t('passwords_dont_match'));
       setLoading(false);
       return;
     }
 
     if (formData.password.length < 6) {
-      setError('Password must be at least 6 characters long');
+      setError(t('password_min_length'));
       setLoading(false);
       return;
     }
@@ -62,8 +64,8 @@ const Register = () => {
       <div className="max-w-2xl mx-auto">
         <div className="bg-white rounded-2xl shadow-xl p-8">
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">Create Your Account</h2>
-            <p className="text-gray-600">Join Doctorry and manage your health records</p>
+            <h2 className="text-3xl font-bold text-gray-900 mb-2">{t('create_account')}</h2>
+            <p className="text-gray-600">{t('join_doctorry')}</p>
           </div>
 
           {error && (
@@ -76,7 +78,7 @@ const Register = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-2">
-                  First Name *
+                  {t('first_name_required')}
                 </label>
                 <input
                   id="firstName"
@@ -86,13 +88,13 @@ const Register = () => {
                   value={formData.firstName}
                   onChange={handleChange}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
-                  placeholder="Enter your first name"
+                  placeholder={t('enter_first_name')}
                 />
               </div>
 
               <div>
                 <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-2">
-                  Last Name *
+                  {t('last_name_required')}
                 </label>
                 <input
                   id="lastName"
@@ -102,7 +104,7 @@ const Register = () => {
                   value={formData.lastName}
                   onChange={handleChange}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
-                  placeholder="Enter your last name"
+                  placeholder={t('enter_last_name')}
                 />
               </div>
             </div>
@@ -110,7 +112,7 @@ const Register = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                  Email Address *
+                  {t('email_address_required')}
                 </label>
                 <input
                   id="email"
@@ -120,13 +122,13 @@ const Register = () => {
                   value={formData.email}
                   onChange={handleChange}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
-                  placeholder="Enter your email"
+                  placeholder={t('enter_email')}
                 />
               </div>
 
               <div>
                 <label htmlFor="mobileNumber" className="block text-sm font-medium text-gray-700 mb-2">
-                  Mobile Number *
+                  {t('mobile_number_required')}
                 </label>
                 <input
                   id="mobileNumber"
@@ -136,7 +138,7 @@ const Register = () => {
                   value={formData.mobileNumber}
                   onChange={handleChange}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
-                  placeholder="Enter your mobile number"
+                  placeholder={t('enter_mobile_number')}
                 />
               </div>
             </div>
@@ -144,7 +146,7 @@ const Register = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label htmlFor="dateOfBirth" className="block text-sm font-medium text-gray-700 mb-2">
-                  Date of Birth *
+                  {t('date_of_birth_required')}
                 </label>
                 <input
                   id="dateOfBirth"
@@ -159,7 +161,7 @@ const Register = () => {
 
               <div>
                 <label htmlFor="gender" className="block text-sm font-medium text-gray-700 mb-2">
-                  Gender *
+                  {t('gender_required')}
                 </label>
                 <select
                   id="gender"
@@ -169,10 +171,10 @@ const Register = () => {
                   onChange={handleChange}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
                 >
-                  <option value="">Select gender</option>
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
-                  <option value="other">Other</option>
+                  <option value="">{t('select_gender_option')}</option>
+                  <option value="male">{t('male')}</option>
+                  <option value="female">{t('female')}</option>
+                  <option value="other">{t('other')}</option>
                 </select>
               </div>
             </div>
@@ -180,7 +182,7 @@ const Register = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-                  Password *
+                  {t('password_required')}
                 </label>
                 <input
                   id="password"
@@ -190,13 +192,13 @@ const Register = () => {
                   value={formData.password}
                   onChange={handleChange}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
-                  placeholder="Create a password"
+                  placeholder={t('create_password')}
                 />
               </div>
 
               <div>
                 <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
-                  Confirm Password *
+                  {t('confirm_password_required')}
                 </label>
                 <input
                   id="confirmPassword"
@@ -206,7 +208,7 @@ const Register = () => {
                   value={formData.confirmPassword}
                   onChange={handleChange}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
-                  placeholder="Confirm your password"
+                  placeholder={t('confirm_password')}
                 />
               </div>
             </div>
@@ -216,18 +218,18 @@ const Register = () => {
               disabled={loading}
               className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? 'Creating Account...' : 'Create Account'}
+              {loading ? t('creating_account') : t('create_account_button')}
             </button>
           </form>
 
           <div className="mt-6 text-center">
             <p className="text-gray-600">
-              Already have an account?{' '}
+              {t('already_have_account')}{' '}
               <Link
                 to="/login"
                 className="text-blue-600 hover:text-blue-700 font-medium transition duration-200"
               >
-                Sign in here
+                {t('sign_in_here')}
               </Link>
             </p>
           </div>

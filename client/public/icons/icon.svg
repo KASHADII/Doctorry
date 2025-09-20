@@ -1,0 +1,23 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1d4ed8;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="256" cy="256" r="240" fill="url(#grad1)" stroke="#ffffff" stroke-width="8"/>
+  
+  <!-- Medical cross -->
+  <rect x="200" y="120" width="112" height="32" rx="16" fill="#ffffff"/>
+  <rect x="240" y="80" width="32" height="192" rx="16" fill="#ffffff"/>
+  
+  <!-- Heart symbol -->
+  <path d="M256 400 C256 400, 200 340, 200 300 C200 280, 220 260, 240 260 C250 260, 256 270, 256 270 C256 270, 262 260, 272 260 C292 260, 312 280, 312 300 C312 340, 256 400, 256 400 Z" fill="#ffffff"/>
+  
+  <!-- Stethoscope -->
+  <circle cx="180" cy="180" r="20" fill="none" stroke="#ffffff" stroke-width="6"/>
+  <path d="M200 180 Q220 200, 240 200" fill="none" stroke="#ffffff" stroke-width="6"/>
+  <circle cx="240" cy="200" r="15" fill="none" stroke="#ffffff" stroke-width="6"/>
+</svg>

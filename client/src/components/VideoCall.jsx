@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import AgoraRTC from 'agora-rtc-sdk-ng';
+import { useTranslation } from 'react-i18next';
 
 const VideoCall = () => {
   const { appointmentId } = useParams();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   
   // Agora configuration - using environment variable
   const APP_ID = import.meta.env.VITE_AGORA_APP_ID || 'ec41c49da5c0442b892490a9bbd037d5';
@@ -99,7 +101,7 @@ const VideoCall = () => {
 
     } catch (error) {
       console.error('Failed to join channel:', error);
-      setError('Failed to join the call. Please check your internet connection.');
+      setError(t('failed_to_join_call'));
     }
   };
 
@@ -136,7 +138,7 @@ const VideoCall = () => {
       console.log('Local tracks published successfully');
     } catch (error) {
       console.error('Failed to create or publish tracks:', error);
-      setError('Failed to initialize camera and microphone. Please check permissions.');
+      setError(t('failed_to_initialize_camera_microphone'));
     }
   };
 
@@ -207,7 +209,7 @@ const VideoCall = () => {
       }
     } catch (error) {
       console.error('Failed to toggle screen share:', error);
-      setError('Failed to start screen sharing. Please try again.');
+      setError(t('screen_share_failed'));
     }
   };
 
@@ -293,11 +295,11 @@ const VideoCall = () => {
     } catch (error) {
       console.error('Permission denied or device error:', error);
       if (error.name === 'NotAllowedError') {
-        setError('Camera and microphone access is required for video calls. Please allow permissions and try again.');
+        setError(t('camera_microphone_permission_required'));
       } else if (error.name === 'NotFoundError') {
-        setError('No camera or microphone found. Please check your device.');
+        setError(t('no_camera_microphone_found'));
       } else {
-        setError('Failed to access camera and microphone. Please check your device settings.');
+        setError(t('failed_to_access_camera_microphone'));
       }
     } finally {
       setLoading(false);
@@ -309,7 +311,7 @@ const VideoCall = () => {
       <div className="min-h-screen bg-gray-900 flex items-center justify-center">
         <div className="text-center text-white">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
-          <p>Loading appointment details...</p>
+          <p>{t('loading_appointment_details')}</p>
         </div>
       </div>
     );
@@ -326,7 +328,7 @@ const VideoCall = () => {
             onClick={() => navigate('/appointments')}
             className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700"
           >
-            Back to Appointments
+            Back to {t('my_appointments')}
           </button>
         </div>
       </div>
@@ -337,12 +339,12 @@ const VideoCall = () => {
     return (
       <div className="min-h-screen bg-gray-900 flex items-center justify-center">
         <div className="text-center text-white max-w-md">
-          <h1 className="text-2xl font-bold mb-4">Video Consultation</h1>
+          <h1 className="text-2xl font-bold mb-4">{t('video_call_title')}</h1>
           {appointment && (
             <div className="bg-gray-800 p-4 rounded mb-6">
-              <p><strong>Doctor:</strong> Dr. {appointment.doctor.firstName} {appointment.doctor.lastName}</p>
-              <p><strong>Date:</strong> {new Date(appointment.appointmentDate).toLocaleDateString()}</p>
-              <p><strong>Time:</strong> {appointment.appointmentTime}</p>
+              <p><strong>{t('doctor')}:</strong> Dr. {appointment.doctor.firstName} {appointment.doctor.lastName}</p>
+              <p><strong>{t('appointment_date')}:</strong> {new Date(appointment.appointmentDate).toLocaleDateString()}</p>
+              <p><strong>{t('appointment_time')}:</strong> {appointment.appointmentTime}</p>
             </div>
           )}
           <button
@@ -350,7 +352,7 @@ const VideoCall = () => {
             disabled={loading}
             className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 disabled:opacity-50"
           >
-            {loading ? 'Joining...' : 'Join Call'}
+            {loading ? t('joining_call') : t('join_call_button')}
           </button>
         </div>
       </div>
@@ -381,7 +383,7 @@ const VideoCall = () => {
         </div>
         <div className="flex items-center space-x-2">
           <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-          <span className="text-xs text-gray-400">Live</span>
+          <span className="text-xs text-gray-400">{t('live')}</span>
         </div>
       </div>
 
@@ -402,7 +404,7 @@ const VideoCall = () => {
                   <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
                 </svg>
               </div>
-              <p className="text-gray-400 text-sm">Waiting for doctor...</p>
+              <p className="text-gray-400 text-sm">{t('waiting_for_doctor')}</p>
             </div>
           </div>
         </div>
@@ -421,14 +423,14 @@ const VideoCall = () => {
                   <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
                 </svg>
               </div>
-              <p className="text-gray-400 text-xs">You</p>
+              <p className="text-gray-400 text-xs">{t('you')}</p>
             </div>
           </div>
         </div>
 
         {/* Connection Status */}
         <div className="absolute top-4 left-4 bg-black bg-opacity-50 px-3 py-1 rounded-full">
-          <span className="text-xs text-white">Connected</span>
+          <span className="text-xs text-white">{t('connected')}</span>
         </div>
       </div>
 

@@ -58,7 +58,7 @@ const Dashboard = () => {
     
     if (result.success) {
       setIsEditing(false);
-      setMessage('Profile updated successfully!');
+      setMessage(t('profile_updated_successfully'));
       setTimeout(() => setMessage(''), 3000);
     } else {
       setMessage(result.message);
@@ -94,7 +94,7 @@ const Dashboard = () => {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading your dashboard...</p>
+          <p className="text-gray-600">{t('loading_dashboard')}</p>
         </div>
       </div>
     );
@@ -219,13 +219,13 @@ const Dashboard = () => {
         {/* Profile Information */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-8">
           <div className="flex justify-between items-center mb-6">
-            <h3 className="text-xl font-semibold text-gray-900">Personal Information</h3>
+            <h3 className="text-xl font-semibold text-gray-900">{t('personal_information')}</h3>
             {!isEditing ? (
               <button
                 onClick={handleEdit}
                 className="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition duration-200"
               >
-                Edit Profile
+{t('edit_profile')}
               </button>
             ) : (
               <div className="flex space-x-2">
@@ -234,13 +234,13 @@ const Dashboard = () => {
                   disabled={loading}
                   className="bg-green-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-green-700 transition duration-200 disabled:opacity-50"
                 >
-                  {loading ? 'Saving...' : 'Save Changes'}
+                  {loading ? t('saving') : t('save_changes')}
                 </button>
                 <button
                   onClick={handleCancel}
                   className="bg-gray-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-gray-700 transition duration-200"
                 >
-                  Cancel
+{t('cancel')}
                 </button>
               </div>
             )}
@@ -248,7 +248,7 @@ const Dashboard = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">First Name</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">{t('first_name')}</label>
               <input
                 type="text"
                 name="firstName"
@@ -260,7 +260,7 @@ const Dashboard = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">{t('last_name')}</label>
               <input
                 type="text"
                 name="lastName"
@@ -272,7 +272,7 @@ const Dashboard = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">{t('email')}</label>
               <input
                 type="email"
                 name="email"
@@ -284,7 +284,7 @@ const Dashboard = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Mobile Number</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">{t('mobile_number')}</label>
               <input
                 type="tel"
                 name="mobileNumber"
@@ -296,7 +296,7 @@ const Dashboard = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Date of Birth</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">{t('date_of_birth')}</label>
               <input
                 type="date"
                 name="dateOfBirth"
@@ -316,10 +316,10 @@ const Dashboard = () => {
                 disabled={!isEditing}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 disabled:bg-gray-50 disabled:text-gray-500"
               >
-                <option value="">Select gender</option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-                <option value="other">Other</option>
+                <option value="">{t('select_gender')}</option>
+                <option value="male">{t('male')}</option>
+                <option value="female">{t('female')}</option>
+                <option value="other">{t('other')}</option>
               </select>
             </div>
           </div>
@@ -327,10 +327,10 @@ const Dashboard = () => {
 
         {/* Emergency Contact */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-8">
-          <h3 className="text-xl font-semibold text-gray-900 mb-6">Emergency Contact</h3>
+          <h3 className="text-xl font-semibold text-gray-900 mb-6">{t('emergency_contact')}</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Contact Name</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">{t('contact_name')}</label>
               <input
                 type="text"
                 name="emergencyContact.name"
@@ -342,7 +342,7 @@ const Dashboard = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Relationship</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">{t('relationship')}</label>
               <input
                 type="text"
                 name="emergencyContact.relationship"
@@ -354,7 +354,7 @@ const Dashboard = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">{t('phone_number')}</label>
               <input
                 type="tel"
                 name="emergencyContact.phone"
@@ -371,7 +371,7 @@ const Dashboard = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Allergies */}
           <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-            <h3 className="text-xl font-semibold text-gray-900 mb-4">Allergies</h3>
+            <h3 className="text-xl font-semibold text-gray-900 mb-4">{t('allergies')}</h3>
             {user.allergies && user.allergies.length > 0 ? (
               <ul className="space-y-2">
                 {user.allergies.map((allergy, index) => (
@@ -384,13 +384,13 @@ const Dashboard = () => {
                 ))}
               </ul>
             ) : (
-              <p className="text-gray-500 italic">No allergies recorded</p>
+              <p className="text-gray-500 italic">{t('no_allergies_recorded')}</p>
             )}
           </div>
 
           {/* Current Medications */}
           <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-            <h3 className="text-xl font-semibold text-gray-900 mb-4">Current Medications</h3>
+            <h3 className="text-xl font-semibold text-gray-900 mb-4">{t('current_medications')}</h3>
             {user.medications && user.medications.length > 0 ? (
               <ul className="space-y-3">
                 {user.medications.map((medication, index) => (
@@ -403,7 +403,7 @@ const Dashboard = () => {
                 ))}
               </ul>
             ) : (
-              <p className="text-gray-500 italic">No current medications recorded</p>
+              <p className="text-gray-500 italic">{t('no_medications_recorded')}</p>
             )}
           </div>
         </div>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 const AppointmentsList = () => {
   const [appointments, setAppointments] = useState([]);
@@ -9,6 +10,7 @@ const AppointmentsList = () => {
   const [success, setSuccess] = useState('');
   const { isAuthenticated, user } = useAuth();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -47,7 +49,7 @@ const AppointmentsList = () => {
         setError(data.message);
       }
     } catch (error) {
-      setError('Failed to fetch appointments');
+      setError(t('failed_to_fetch_appointments'));
     } finally {
       setLoading(false);
     }
@@ -59,7 +61,7 @@ const AppointmentsList = () => {
   };
 
   const handleCancelAppointment = async (appointmentId) => {
-    if (!window.confirm('Are you sure you want to cancel this appointment?')) {
+    if (!window.confirm(t('confirm_cancel_appointment'))) {
       return;
     }
 
@@ -76,13 +78,13 @@ const AppointmentsList = () => {
       const data = await response.json();
 
       if (response.ok) {
-        setSuccess('Appointment cancelled successfully');
+        setSuccess(t('appointment_cancelled'));
         fetchAppointments();
       } else {
         setError(data.message);
       }
     } catch (error) {
-      setError('Failed to cancel appointment');
+      setError(t('failed_to_cancel_appointment'));
     }
   };
 
@@ -124,7 +126,7 @@ const AppointmentsList = () => {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading appointments...</p>
+          <p className="text-gray-600">{t('loading_appointments')}</p>
         </div>
       </div>
     );
@@ -137,12 +139,12 @@ const AppointmentsList = () => {
         <div className="flex justify-between items-center mb-8">
           <div>
             <h1 className="text-3xl font-bold text-gray-900">
-              {user?.role === 'doctor' ? 'My Appointments' : 'My Appointments'}
+              {t('my_appointments')}
             </h1>
             <p className="mt-2 text-gray-600">
               {user?.role === 'doctor' 
-                ? 'Manage your patient consultations' 
-                : 'View and manage your medical appointments'
+                ? t('manage_patient_consultations') 
+                : t('view_manage_appointments')
               }
             </p>
           </div>
@@ -151,7 +153,7 @@ const AppointmentsList = () => {
               onClick={() => navigate('/book-appointment')}
               className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"
             >
-              Book New Appointment
+              {t('book_new_appointment')}
             </button>
           )}
         </div>
@@ -177,11 +179,11 @@ const AppointmentsList = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
             </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No appointments found</h3>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">{t('no_appointments_found')}</h3>
             <p className="text-gray-600 mb-4">
               {user?.role === 'doctor' 
-                ? 'You don\'t have any scheduled appointments yet.' 
-                : 'You haven\'t booked any appointments yet.'
+                ? t('no_scheduled_appointments') 
+                : t('no_booked_appointments')
               }
             </p>
             {user?.role !== 'doctor' && (
@@ -189,7 +191,7 @@ const AppointmentsList = () => {
                 onClick={() => navigate('/book-appointment')}
                 className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"
               >
-                Book Your First Appointment
+                {t('book_first_appointment')}
               </button>
             )}
           </div>
@@ -213,30 +215,30 @@ const AppointmentsList = () => {
                     
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-sm text-gray-600">
                       <div>
-                        <span className="font-medium">Date:</span> {formatDate(appointment.appointmentDate)}
+                        <span className="font-medium">{t('appointment_date')}:</span> {formatDate(appointment.appointmentDate)}
                       </div>
                       <div>
-                        <span className="font-medium">Time:</span> {appointment.appointmentTime}
+                        <span className="font-medium">{t('appointment_time')}:</span> {appointment.appointmentTime}
                       </div>
                       <div>
-                        <span className="font-medium">Duration:</span> {appointment.duration} minutes
+                        <span className="font-medium">{t('duration')}:</span> {appointment.duration} {t('minutes')}
                       </div>
                       <div>
-                        <span className="font-medium">Type:</span> {appointment.consultationType}
+                        <span className="font-medium">{t('appointment_type')}:</span> {appointment.consultationType}
                       </div>
                       <div>
-                        <span className="font-medium">Fee:</span> ₹{appointment.amount}
+                        <span className="font-medium">{t('consultation_fee')}:</span> ₹{appointment.amount}
                       </div>
                       {appointment.symptoms && (
                         <div className="md:col-span-2 lg:col-span-3">
-                          <span className="font-medium">Symptoms:</span> {appointment.symptoms}
+                          <span className="font-medium">{t('symptoms')}:</span> {appointment.symptoms}
                         </div>
                       )}
                     </div>
 
                     {appointment.prescription && (
                       <div className="mt-3 p-3 bg-blue-50 rounded">
-                        <span className="font-medium text-blue-900">Prescription:</span>
+                        <span className="font-medium text-blue-900">{t('prescription')}:</span>
                         <p className="text-blue-800 mt-1">{appointment.prescription}</p>
                       </div>
                     )}
@@ -248,7 +250,7 @@ const AppointmentsList = () => {
                         onClick={() => handleJoinCall(appointment)}
                         className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 text-sm"
                       >
-                        Join Call
+                        {t('join_call')}
                       </button>
                     )}
                     
@@ -257,7 +259,7 @@ const AppointmentsList = () => {
                         onClick={() => handleCancelAppointment(appointment._id)}
                         className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 text-sm"
                       >
-                        Cancel
+                        {t('cancel')}
                       </button>
                     )}
 
@@ -266,7 +268,7 @@ const AppointmentsList = () => {
                         onClick={() => navigate(`/appointment-details/${appointment._id}`)}
                         className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 text-sm"
                       >
-                        View Details
+                        {t('view_details')}
                       </button>
                     )}
                   </div>

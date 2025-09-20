@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MEDICAL_SPECIALIZATIONS } from '../constants/medicalConstants';
+import { useTranslation } from 'react-i18next';
 
 const AdminDashboard = () => {
   const [doctors, setDoctors] = useState([]);
@@ -25,6 +26,7 @@ const AdminDashboard = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   useEffect(() => {
     const token = localStorage.getItem('adminToken');
@@ -49,10 +51,10 @@ const AdminDashboard = () => {
         const data = await response.json();
         setDoctors(data.doctors);
       } else {
-        setError('Failed to fetch doctors');
+        setError(t('failed_to_fetch_doctors'));
       }
     } catch (error) {
-      setError('Network error');
+      setError(t('network_error'));
     } finally {
       setLoading(false);
     }
@@ -97,7 +99,7 @@ const AdminDashboard = () => {
       const data = await response.json();
 
       if (response.ok) {
-        setSuccess(`Doctor created successfully! Doctor ID: ${data.credentials.loginId}, Password: ${data.credentials.password}`);
+        setSuccess(t('doctor_created_successfully', { loginId: data.credentials.loginId, password: data.credentials.password }));
         setFormData({
           firstName: '',
           lastName: '',
@@ -120,7 +122,7 @@ const AdminDashboard = () => {
         setError(data.message);
       }
     } catch (error) {
-      setError('Network error');
+      setError(t('network_error'));
     } finally {
       setLoading(false);
     }
@@ -141,15 +143,15 @@ const AdminDashboard = () => {
       if (response.ok) {
         fetchDoctors();
       } else {
-        setError('Failed to update doctor status');
+        setError(t('failed_to_update_doctor_status'));
       }
     } catch (error) {
-      setError('Network error');
+      setError(t('network_error'));
     }
   };
 
   const deleteDoctor = async (doctorId) => {
-    if (!window.confirm('Are you sure you want to delete this doctor?')) {
+    if (!window.confirm(t('confirm_delete_doctor'))) {
       return;
     }
 
@@ -166,10 +168,10 @@ const AdminDashboard = () => {
       if (response.ok) {
         fetchDoctors();
       } else {
-        setError('Failed to delete doctor');
+        setError(t('failed_to_delete_doctor'));
       }
     } catch (error) {
-      setError('Network error');
+      setError(t('network_error'));
     }
   };
 
@@ -182,7 +184,7 @@ const AdminDashboard = () => {
   if (loading && doctors.length === 0) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-lg">Loading...</div>
+        <div className="text-lg">{t('loading')}</div>
       </div>
     );
   }
@@ -193,20 +195,20 @@ const AdminDashboard = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex items-center">
-              <h1 className="text-xl font-semibold text-gray-900">Admin Dashboard</h1>
+              <h1 className="text-xl font-semibold text-gray-900">{t('admin_dashboard')}</h1>
             </div>
             <div className="flex items-center space-x-4">
               <button
                 onClick={() => setShowAddForm(true)}
                 className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"
               >
-                Add Doctor
+                {t('add_doctor')}
               </button>
               <button
                 onClick={logout}
                 className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700"
               >
-                Logout
+                {t('logout')}
               </button>
             </div>
           </div>
@@ -228,32 +230,32 @@ const AdminDashboard = () => {
 
         <div className="px-4 py-6 sm:px-0">
           <div className="border-4 border-dashed border-gray-200 rounded-lg p-6">
-            <h2 className="text-lg font-medium text-gray-900 mb-4">Doctors Management</h2>
+            <h2 className="text-lg font-medium text-gray-900 mb-4">{t('doctors_management')}</h2>
             
             {doctors.length === 0 ? (
-              <p className="text-gray-500">No doctors found. Add a doctor to get started.</p>
+              <p className="text-gray-500">{t('no_doctors_found')}</p>
             ) : (
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead className="bg-gray-50">
                     <tr>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Doctor ID
+                        {t('doctor_id')}
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Name
+                        {t('full_name')}
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Specialization
+                        {t('specialization')}
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Experience
+                        {t('experience')}
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Status
+                        {t('status')}
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Actions
+                        {t('actions')}
                       </th>
                     </tr>
                   </thead>
@@ -270,7 +272,7 @@ const AdminDashboard = () => {
                           {doctor.specialization}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          {doctor.experience} years
+                          {doctor.experience} {t('years')}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
@@ -278,7 +280,7 @@ const AdminDashboard = () => {
                               ? 'bg-green-100 text-green-800' 
                               : 'bg-red-100 text-red-800'
                           }`}>
-                            {doctor.isActive ? 'Active' : 'Inactive'}
+                            {doctor.isActive ? t('active') : t('inactive')}
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
@@ -290,13 +292,13 @@ const AdminDashboard = () => {
                                 : 'text-green-600 hover:text-green-900'
                             }`}
                           >
-                            {doctor.isActive ? 'Deactivate' : 'Activate'}
+                            {doctor.isActive ? t('deactivate') : t('activate')}
                           </button>
                           <button
                             onClick={() => deleteDoctor(doctor._id)}
                             className="text-red-600 hover:text-red-900"
                           >
-                            Delete
+                            {t('delete')}
                           </button>
                         </td>
                       </tr>
@@ -314,13 +316,13 @@ const AdminDashboard = () => {
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
           <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
             <div className="mt-3">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Add New Doctor</h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-4">{t('add_new_doctor')}</h3>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <input
                     type="text"
                     name="firstName"
-                    placeholder="First Name"
+                    placeholder={t('first_name')}
                     required
                     value={formData.firstName}
                     onChange={handleChange}
@@ -329,7 +331,7 @@ const AdminDashboard = () => {
                   <input
                     type="text"
                     name="lastName"
-                    placeholder="Last Name"
+                    placeholder={t('last_name')}
                     required
                     value={formData.lastName}
                     onChange={handleChange}
@@ -343,7 +345,7 @@ const AdminDashboard = () => {
                   onChange={handleChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 >
-                  <option value="">Select Specialization</option>
+                  <option value="">{t('select_specialization')}</option>
                   {MEDICAL_SPECIALIZATIONS.map((spec) => (
                     <option key={spec} value={spec}>{spec}</option>
                   ))}
@@ -351,7 +353,7 @@ const AdminDashboard = () => {
                 <input
                   type="text"
                   name="qualification"
-                  placeholder="Qualification"
+                    placeholder={t('qualification')}
                   required
                   value={formData.qualification}
                   onChange={handleChange}
@@ -361,7 +363,7 @@ const AdminDashboard = () => {
                   <input
                     type="number"
                     name="experience"
-                    placeholder="Experience (years)"
+                    placeholder={t('experience_years')}
                     required
                     value={formData.experience}
                     onChange={handleChange}
@@ -370,7 +372,7 @@ const AdminDashboard = () => {
                   <input
                     type="number"
                     name="consultationFee"
-                    placeholder="Consultation Fee"
+                    placeholder={t('consultation_fee')}
                     required
                     value={formData.consultationFee}
                     onChange={handleChange}
@@ -380,7 +382,7 @@ const AdminDashboard = () => {
                 <input
                   type="tel"
                   name="phoneNumber"
-                  placeholder="Phone Number"
+                    placeholder={t('phone_number')}
                   required
                   value={formData.phoneNumber}
                   onChange={handleChange}
@@ -390,7 +392,7 @@ const AdminDashboard = () => {
                   <input
                     type="text"
                     name="address.city"
-                    placeholder="City"
+                    placeholder={t('city')}
                     value={formData.address.city}
                     onChange={handleChange}
                     className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -398,7 +400,7 @@ const AdminDashboard = () => {
                   <input
                     type="text"
                     name="address.state"
-                    placeholder="State"
+                    placeholder={t('state')}
                     value={formData.address.state}
                     onChange={handleChange}
                     className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -410,14 +412,14 @@ const AdminDashboard = () => {
                     onClick={() => setShowAddForm(false)}
                     className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300"
                   >
-                    Cancel
+                    {t('cancel')}
                   </button>
                   <button
                     type="submit"
                     disabled={loading}
                     className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 disabled:opacity-50"
                   >
-                    {loading ? 'Adding...' : 'Add Doctor'}
+                    {loading ? t('adding') : t('add_doctor')}
                   </button>
                 </div>
               </form>

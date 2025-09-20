@@ -76,11 +76,11 @@ const Home = () => {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
           <div className="text-center">
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-              Your Health,
-              <span className="text-blue-600 block">Simplified</span>
+              {t('hero_title')}
+              <span className="text-blue-600 block">{t('hero_subtitle')}</span>
             </h1>
             <p className="text-xl sm:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
-              Manage your medical records, track your health journey, and stay connected with your healthcare providers all in one secure platform.
+              {t('hero_description')}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               {!isAuthenticated && (
@@ -89,13 +89,13 @@ const Home = () => {
                     to="/register"
                     className="bg-blue-600 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-blue-700 transition duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
                   >
-                    Start Your Journey
+                    {t('start_journey')}
                   </Link>
                   <Link
                     to="/login"
                     className="border-2 border-blue-600 text-blue-600 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-blue-600 hover:text-white transition duration-200"
                   >
-                    Sign In
+                    {t('sign_in')}
                   </Link>
                 </>
               )}
@@ -115,10 +115,10 @@ const Home = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-              Why Choose Doctorry?
+              {t('why_choose_doctorry')}
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              We've designed our platform with patients in mind, offering intuitive tools to manage your health information.
+              {t('why_choose_description')}
             </p>
           </div>
 
@@ -129,9 +129,9 @@ const Home = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">Secure Records</h3>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">{t('secure_records')}</h3>
               <p className="text-gray-600">
-                Your medical information is encrypted and stored securely, accessible only to you and authorized healthcare providers.
+                {t('secure_records_description')}
               </p>
             </div>
 
@@ -141,9 +141,9 @@ const Home = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">24/7 Access</h3>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">{t('access_24_7')}</h3>
               <p className="text-gray-600">
-                Access your health records anytime, anywhere. No more waiting for office hours or misplaced documents.
+                {t('access_24_7_description')}
               </p>
             </div>
 
@@ -153,9 +153,9 @@ const Home = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">Quick & Easy</h3>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">{t('quick_easy')}</h3>
               <p className="text-gray-600">
-                Simple, intuitive interface designed for all ages. Manage your health information without the complexity.
+                {t('quick_easy_description')}
               </p>
             </div>
           </div>
@@ -166,17 +166,17 @@ const Home = () => {
       <section className="py-20 bg-gradient-to-r from-blue-600 to-indigo-600">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
-            Ready to Take Control of Your Health?
+            {t('ready_take_control')}
           </h2>
           <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-            Join thousands of patients who have simplified their healthcare journey with Doctorry.
+            {t('join_thousands')}
           </p>
           {!isAuthenticated && (
             <Link
               to="/register"
               className="bg-white text-blue-600 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gray-50 transition duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1 inline-block"
             >
-              Get Started Today
+              {t('get_started_today')}
             </Link>
           )}
         </div>
@@ -188,10 +188,10 @@ const Home = () => {
           <div className="text-center">
             <h3 className="text-2xl font-bold mb-4">Doctorry</h3>
             <p className="text-gray-400 mb-4">
-              Empowering patients with better healthcare management.
+              {t('empowering_patients')}
             </p>
             <p className="text-gray-500 text-sm">
-              © 2024 Doctorry. All rights reserved.
+              {t('all_rights_reserved')}
             </p>
           </div>
         </div>

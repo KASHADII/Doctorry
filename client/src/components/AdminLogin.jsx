@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const AdminLogin = () => {
   const [formData, setFormData] = useState({
@@ -9,6 +10,7 @@ const AdminLogin = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const handleChange = (e) => {
     setFormData({
@@ -41,7 +43,7 @@ const AdminLogin = () => {
         setError(data.message);
       }
     } catch (error) {
-      setError('Network error. Please try again.');
+      setError(t('network_error'));
     } finally {
       setLoading(false);
     }
@@ -52,10 +54,10 @@ const AdminLogin = () => {
       <div className="max-w-md w-full space-y-8">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Admin Login
+            {t('admin_login')}
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
-            Sign in to your admin account
+            {t('sign_in_to_account')}
           </p>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
@@ -71,7 +73,7 @@ const AdminLogin = () => {
                 autoComplete="email"
                 required
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Email address"
+                placeholder={t('email_address')}
                 value={formData.email}
                 onChange={handleChange}
               />
@@ -87,7 +89,7 @@ const AdminLogin = () => {
                 autoComplete="current-password"
                 required
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Password"
+                placeholder={t('password')}
                 value={formData.password}
                 onChange={handleChange}
               />
@@ -104,7 +106,7 @@ const AdminLogin = () => {
               disabled={loading}
               className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? 'Signing in...' : 'Sign in'}
+              {loading ? t('signing_in') : t('sign_in')}
             </button>
           </div>
 
@@ -114,7 +116,7 @@ const AdminLogin = () => {
               onClick={() => navigate('/')}
               className="text-indigo-600 hover:text-indigo-500 text-sm"
             >
-              Back to Home
+              {t('back_to_home')}
             </button>
           </div>
         </form>
