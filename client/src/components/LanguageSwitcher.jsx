@@ -49,18 +49,35 @@ const LanguageSwitcher = () => {
   const currentLanguageInfo = getCurrentLanguageInfo();
 
   return (
-    <div className="fixed top-4 right-4 z-50">
-      <div className="bg-white rounded-lg shadow-lg border border-gray-200 p-2">
-        <div className="relative">
-          <button
-            onClick={() => setShowDropdown(!showDropdown)}
-            disabled={isTranslating}
-            className={`flex items-center space-x-2 px-3 py-2 rounded text-sm font-medium transition-colors ${
-              isTranslating
-                ? 'bg-gray-100 text-gray-500 cursor-not-allowed'
-                : 'bg-blue-600 text-white hover:bg-blue-700'
-            }`}
-          >
+    <div className="relative">
+      <button
+        onClick={() => setShowDropdown(!showDropdown)}
+        disabled={isTranslating}
+        className={`flex items-center space-x-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+          isTranslating
+            ? 'bg-gray-100 text-gray-500 cursor-not-allowed'
+            : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300 hover:border-gray-400 shadow-sm hover:shadow-md'
+        }`}
+        style={{
+          color: isTranslating ? 'var(--color-gray-500)' : 'var(--color-gray-700)',
+          backgroundColor: isTranslating ? 'var(--color-gray-100)' : 'var(--color-white)',
+          borderColor: isTranslating ? 'var(--color-gray-300)' : 'var(--color-gray-300)'
+        }}
+        onMouseEnter={(e) => {
+          if (!isTranslating) {
+            e.target.style.backgroundColor = 'var(--color-gray-50)';
+            e.target.style.borderColor = 'var(--color-primary)';
+            e.target.style.color = 'var(--color-primary)';
+          }
+        }}
+        onMouseLeave={(e) => {
+          if (!isTranslating) {
+            e.target.style.backgroundColor = 'var(--color-white)';
+            e.target.style.borderColor = 'var(--color-gray-300)';
+            e.target.style.color = 'var(--color-gray-700)';
+          }
+        }}
+      >
             {isTranslating ? (
               <>
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
@@ -81,21 +98,28 @@ const LanguageSwitcher = () => {
           </button>
 
           {showDropdown && !isTranslating && (
-            <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 max-h-80 overflow-y-auto">
-              <div className="p-2">
-                <div className="text-xs text-gray-500 mb-2 px-2">
+            <div className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-xl border border-gray-200 max-h-80 overflow-y-auto z-50" style={{
+              backgroundColor: 'var(--color-white)',
+              borderColor: 'var(--color-gray-200)',
+              boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)'
+            }}>
+              <div className="p-3">
+                <div className="text-xs text-gray-500 mb-3 px-2 font-medium" style={{color: 'var(--color-gray-500)'}}>
                   {isGoogleTranslateEnabled ? 'Powered by Google Translate' : 'Basic Languages'}
                 </div>
                 
                 {translationError && (
-                  <div className="text-xs text-red-600 px-2 py-1 mb-2 bg-red-50 rounded">
+                  <div className="text-xs text-red-600 px-3 py-2 mb-3 bg-red-50 rounded-lg" style={{
+                    color: 'var(--color-red-600)',
+                    backgroundColor: 'var(--color-red-50)'
+                  }}>
                     Error: {translationError}
                   </div>
                 )}
                 
                 {/* Predefined Languages */}
-                <div className="mb-2">
-                  <div className="text-xs font-semibold text-gray-700 px-2 py-1">Predefined</div>
+                <div className="mb-3">
+                  <div className="text-xs font-semibold text-gray-700 px-2 py-2 mb-2" style={{color: 'var(--color-gray-700)'}}>Predefined</div>
                   {['en', 'hi', 'pa'].map((lang) => {
                     const language = supportedLanguages.find(l => l.code === lang);
                     if (!language) return null;
@@ -104,14 +128,28 @@ const LanguageSwitcher = () => {
                       <button
                         key={lang}
                         onClick={() => handleLanguageChange(lang)}
-                        className={`w-full flex items-center space-x-2 px-2 py-2 text-sm rounded hover:bg-gray-100 ${
+                        className={`w-full flex items-center space-x-3 px-3 py-2 text-sm rounded-lg hover:bg-gray-50 transition-all duration-200 ${
                           i18n.language === lang ? 'bg-blue-50 text-blue-700' : 'text-gray-700'
                         }`}
+                        style={{
+                          backgroundColor: i18n.language === lang ? 'var(--color-blue-50)' : 'transparent',
+                          color: i18n.language === lang ? 'var(--color-primary)' : 'var(--color-gray-700)'
+                        }}
+                        onMouseEnter={(e) => {
+                          if (i18n.language !== lang) {
+                            e.target.style.backgroundColor = 'var(--color-gray-50)';
+                          }
+                        }}
+                        onMouseLeave={(e) => {
+                          if (i18n.language !== lang) {
+                            e.target.style.backgroundColor = 'transparent';
+                          }
+                        }}
                       >
-                        <span>{getLanguageFlag(lang)}</span>
-                        <span>{language.name}</span>
+                        <span className="text-lg">{getLanguageFlag(lang)}</span>
+                        <span className="flex-1 text-left">{language.name}</span>
                         {i18n.language === lang && (
-                          <svg className="w-4 h-4 ml-auto" fill="currentColor" viewBox="0 0 20 20">
+                          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" style={{color: 'var(--color-primary)'}}>
                             <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                           </svg>
                         )}
@@ -123,7 +161,7 @@ const LanguageSwitcher = () => {
                 {/* Google Translate Languages */}
                 {isGoogleTranslateEnabled && (
                   <div>
-                    <div className="text-xs font-semibold text-gray-700 px-2 py-1">More Languages</div>
+                    <div className="text-xs font-semibold text-gray-700 px-2 py-2 mb-2" style={{color: 'var(--color-gray-700)'}}>More Languages</div>
                     {supportedLanguages
                       .filter(lang => !['en', 'hi', 'pa'].includes(lang.code))
                       .slice(0, 20) // Limit to first 20 for better UX
@@ -131,14 +169,28 @@ const LanguageSwitcher = () => {
                         <button
                           key={language.code}
                           onClick={() => handleLanguageChange(language.code)}
-                          className={`w-full flex items-center space-x-2 px-2 py-2 text-sm rounded hover:bg-gray-100 ${
+                          className={`w-full flex items-center space-x-3 px-3 py-2 text-sm rounded-lg hover:bg-gray-50 transition-all duration-200 ${
                             i18n.language === language.code ? 'bg-blue-50 text-blue-700' : 'text-gray-700'
                           }`}
+                          style={{
+                            backgroundColor: i18n.language === language.code ? 'var(--color-blue-50)' : 'transparent',
+                            color: i18n.language === language.code ? 'var(--color-primary)' : 'var(--color-gray-700)'
+                          }}
+                          onMouseEnter={(e) => {
+                            if (i18n.language !== language.code) {
+                              e.target.style.backgroundColor = 'var(--color-gray-50)';
+                            }
+                          }}
+                          onMouseLeave={(e) => {
+                            if (i18n.language !== language.code) {
+                              e.target.style.backgroundColor = 'transparent';
+                            }
+                          }}
                         >
-                          <span>{getLanguageFlag(language.code)}</span>
-                          <span>{language.name}</span>
+                          <span className="text-lg">{getLanguageFlag(language.code)}</span>
+                          <span className="flex-1 text-left">{language.name}</span>
                           {i18n.language === language.code && (
-                            <svg className="w-4 h-4 ml-auto" fill="currentColor" viewBox="0 0 20 20">
+                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" style={{color: 'var(--color-primary)'}}>
                               <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                             </svg>
                           )}
@@ -148,8 +200,12 @@ const LanguageSwitcher = () => {
                 )}
 
                 {!isGoogleTranslateEnabled && (
-                  <div className="text-xs text-gray-500 px-2 py-2 border-t mt-2">
-                    <div className="mb-1">💡 Enable Google Translate API for more languages</div>
+                  <div className="text-xs text-gray-500 px-3 py-3 border-t mt-3 rounded-lg bg-gray-50" style={{
+                    color: 'var(--color-gray-500)',
+                    backgroundColor: 'var(--color-gray-50)',
+                    borderTopColor: 'var(--color-gray-200)'
+                  }}>
+                    <div className="mb-2 font-medium">💡 Enable Google Translate API for more languages</div>
                     <div className="text-xs">Add VITE_GOOGLE_TRANSLATE_API_KEY to your .env file</div>
                   </div>
                 )}
@@ -157,8 +213,6 @@ const LanguageSwitcher = () => {
             </div>
           )}
         </div>
-      </div>
-    </div>
   );
 };
 

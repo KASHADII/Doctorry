@@ -15,14 +15,12 @@ import VideoCall from './components/VideoCall';
 import AppointmentsList from './components/AppointmentsList';
 import AboutUs from './components/AboutUs';
 import Pharmacy from './components/Pharmacy';
-import Doctors from './components/Doctors';
 import Contact from './components/Contact';
-import Services from './components/Services';
 import News from './components/News';
 import SingleNews from './components/SingleNews';
-import LanguageSwitcher from './components/LanguageSwitcher';
 import PWAInstallPrompt from './components/PWAInstallPrompt';
 import NotificationPermission from './components/NotificationPermission';
+import ChatbotPage from './components/ChatbotPage';
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -67,16 +65,13 @@ function App() {
     <AuthProvider>
       <Router>
         <div className="App">
-          <LanguageSwitcher />
           <PWAInstallPrompt />
           <NotificationPermission />
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<AboutUs />} />
-            <Route path="/services" element={<Services />} />
             <Route path="/pharmacy" element={<Pharmacy />} />
-            <Route path="/doctors" element={<Doctors />} />
             <Route path="/news" element={<News />} />
             <Route path="/news/:id" element={<SingleNews />} />
             <Route path="/contact" element={<Contact />} />
@@ -116,6 +111,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Dashboard />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/ai-seva" 
+              element={
+                <ProtectedRoute>
+                  <ChatbotPage />
                 </ProtectedRoute>
               } 
             />

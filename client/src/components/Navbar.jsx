@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import Logo from '../assets/Logo.svg';
+import LanguageSwitcher from './LanguageSwitcher';
 
 const Navbar = () => {
   const { t } = useTranslation();
@@ -52,7 +53,7 @@ const Navbar = () => {
                   borderBottomColor: isActive('/') ? 'var(--color-primary)' : 'transparent'
                 }}
               >
-                Home
+                {t('home')}
               </Link>
               <Link
                 to="/about"
@@ -66,35 +67,7 @@ const Navbar = () => {
                   borderBottomColor: isActive('/about') ? 'var(--color-primary)' : 'transparent'
                 }}
               >
-                About Us
-              </Link>
-              <Link
-                to="/services"
-                className={`font-semibold text-lg transition duration-300 pb-1 ${
-                  isActive('/services') 
-                    ? 'text-primary border-b-2 border-primary' 
-                    : 'text-gray-700 hover:text-primary hover:border-b-2 hover:border-primary'
-                }`}
-                style={{
-                  color: isActive('/services') ? 'var(--color-primary)' : 'var(--color-gray-700)',
-                  borderBottomColor: isActive('/services') ? 'var(--color-primary)' : 'transparent'
-                }}
-              >
-                Services
-              </Link>
-              <Link
-                to="/doctors"
-                className={`font-semibold text-lg transition duration-300 pb-1 ${
-                  isActive('/doctors') 
-                    ? 'text-primary border-b-2 border-primary' 
-                    : 'text-gray-700 hover:text-primary hover:border-b-2 hover:border-primary'
-                }`}
-                style={{
-                  color: isActive('/doctors') ? 'var(--color-primary)' : 'var(--color-gray-700)',
-                  borderBottomColor: isActive('/doctors') ? 'var(--color-primary)' : 'transparent'
-                }}
-              >
-                Doctors
+                {t('about_us')}
               </Link>
               <Link
                 to="/news"
@@ -108,7 +81,7 @@ const Navbar = () => {
                   borderBottomColor: isActive('/news') ? 'var(--color-primary)' : 'transparent'
                 }}
               >
-                News
+                {t('news')}
               </Link>
               <Link
                 to="/contact"
@@ -122,12 +95,15 @@ const Navbar = () => {
                   borderBottomColor: isActive('/contact') ? 'var(--color-primary)' : 'transparent'
                 }}
               >
-                Contact
+                {t('contact')}
               </Link>
             </div>
 
-            {/* Right Section - Search and Auth Buttons */}
+            {/* Right Section - Language Switcher, Search and Auth Buttons */}
             <div className="flex items-center space-x-4">
+              {/* Language Switcher */}
+              <LanguageSwitcher />
+              
               {/* Search Icon */}
               <button className="text-gray-600 transition duration-200 p-2 rounded-full hover:bg-gray-100" style={{color: 'var(--color-gray-600)'}} onMouseEnter={(e) => e.target.style.color = 'var(--color-primary)'} onMouseLeave={(e) => e.target.style.color = 'var(--color-gray-600)'}>
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -152,7 +128,7 @@ const Navbar = () => {
                   e.target.style.color = 'var(--color-primary)';
                 }}
               >
-                Login
+                {t('login')}
               </Link>
               
               {/* Sign Up Button */}
@@ -169,7 +145,7 @@ const Navbar = () => {
                   e.target.style.background = 'linear-gradient(to right, var(--color-primary), var(--color-primary-dark))';
                 }}
               >
-                Sign Up
+                {t('sign_up')}
               </Link>
             </div>
 
@@ -207,7 +183,7 @@ const Navbar = () => {
                     borderLeftColor: isActive('/') ? 'var(--color-primary)' : 'transparent'
                   }}
                 >
-                  Home
+                  {t('home')}
                 </Link>
                 <Link
                   to="/about"
@@ -223,39 +199,7 @@ const Navbar = () => {
                     borderLeftColor: isActive('/about') ? 'var(--color-primary)' : 'transparent'
                   }}
                 >
-                  About Us
-                </Link>
-                <Link
-                  to="/services"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className={`block px-4 py-3 text-lg font-semibold transition duration-200 ${
-                    isActive('/services') 
-                      ? 'border-l-4' 
-                      : ''
-                  }`}
-                  style={{
-                    color: isActive('/services') ? 'var(--color-primary)' : 'var(--color-gray-700)',
-                    backgroundColor: isActive('/services') ? 'var(--color-gray-50)' : 'transparent',
-                    borderLeftColor: isActive('/services') ? 'var(--color-primary)' : 'transparent'
-                  }}
-                >
-                  Services
-                </Link>
-                <Link
-                  to="/doctors"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className={`block px-4 py-3 text-lg font-semibold transition duration-200 ${
-                    isActive('/doctors') 
-                      ? 'border-l-4' 
-                      : ''
-                  }`}
-                  style={{
-                    color: isActive('/doctors') ? 'var(--color-primary)' : 'var(--color-gray-700)',
-                    backgroundColor: isActive('/doctors') ? 'var(--color-gray-50)' : 'transparent',
-                    borderLeftColor: isActive('/doctors') ? 'var(--color-primary)' : 'transparent'
-                  }}
-                >
-                  Doctors
+                  {t('about_us')}
                 </Link>
                 <Link
                   to="/news"
@@ -271,7 +215,7 @@ const Navbar = () => {
                     borderLeftColor: isActive('/news') ? 'var(--color-primary)' : 'transparent'
                   }}
                 >
-                  News
+                  {t('news')}
                 </Link>
                 <Link
                   to="/contact"
@@ -287,7 +231,7 @@ const Navbar = () => {
                     borderLeftColor: isActive('/contact') ? 'var(--color-primary)' : 'transparent'
                   }}
                 >
-                  Contact
+                  {t('contact')}
                 </Link>
                 <div className="px-4 py-3 space-y-3">
                   <Link
@@ -307,7 +251,7 @@ const Navbar = () => {
                       e.target.style.color = 'var(--color-primary)';
                     }}
                   >
-                    Login
+                    {t('login')}
                   </Link>
                   <Link
                     to="/register"
@@ -317,7 +261,7 @@ const Navbar = () => {
                       background: 'linear-gradient(to right, var(--color-primary), var(--color-primary-dark))'
                     }}
                   >
-                    Sign Up
+                    {t('sign_up')}
                   </Link>
                 </div>
               </div>

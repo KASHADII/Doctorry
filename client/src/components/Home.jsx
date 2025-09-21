@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useTranslation } from 'react-i18next';
 import Navbar from './Navbar';
+import CardCarousel from './CardCarousel';
 
 const Home = () => {
   const { isAuthenticated } = useAuth();
@@ -34,11 +35,11 @@ const Home = () => {
             <div className="text-center lg:text-left -ml-170">
               
               <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6 leading-tight text-white">
-                Your Health,
-                <span className="block" style={{color: 'var(--color-accent-lime)'}}>Our Priority</span>
+                {t('hero_title')}
+                <span className="block" style={{color: 'var(--color-accent-lime)'}}>{t('hero_subtitle')}</span>
               </h1>
               <p className="text-xl sm:text-2xl text-white/90 mb-8 max-w-2xl leading-relaxed">
-                Connect with top-rated doctors, manage your health records, and get personalized care from the comfort of your home.
+                {t('hero_description')}
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                 {!isAuthenticated && (
@@ -56,10 +57,10 @@ const Home = () => {
                         e.target.style.background = 'linear-gradient(to right, var(--color-primary), var(--color-primary-dark))';
                       }}
                     >
-                      Get Started Today
+                      {t('get_started_today')}
                     </Link>
                     <Link
-                      to="/doctors"
+                      to="/book-appointment"
                       className="px-8 py-4 rounded-full font-semibold text-lg transition duration-300"
                       style={{
                         border: '2px solid var(--color-primary)',
@@ -74,9 +75,29 @@ const Home = () => {
                         e.target.style.color = 'var(--color-primary)';
                       }}
                     >
-                      Find Doctors
+                      {t('book_an_appointment')}
                     </Link>
                   </>
+                )}
+                {isAuthenticated && (
+                  <Link
+                    to="/ai-seva"
+                    className="text-white px-8 py-4 rounded-full font-semibold text-lg transition duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center space-x-2"
+                    style={{
+                      background: 'linear-gradient(to right, var(--color-accent-green), var(--color-accent-teal))'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.target.style.background = 'linear-gradient(to right, var(--color-accent-teal), var(--color-accent-green))';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.background = 'linear-gradient(to right, var(--color-accent-green), var(--color-accent-teal))';
+                    }}
+                  >
+                    <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" />
+                    </svg>
+                    <span>{t('ai_seva')}</span>
+                  </Link>
                 )}
               </div>
               
@@ -102,142 +123,119 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-20 bg-white">
+      {/* Quick Actions Section */}
+      <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
-              Why Choose Doctorry?
+          <div className="text-center mb-12">
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4" style={{color: 'var(--color-gray-900)'}}>
+              
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              We provide comprehensive healthcare solutions designed to make your medical journey seamless and effective.
+            <p className="text-lg max-w-2xl mx-auto" style={{color: 'var(--color-gray-600)'}}>
+             
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="group text-center p-8 rounded-2xl hover:shadow-xl transition duration-300 border" style={{
-              borderColor: 'var(--color-gray-100)'
-            }} onMouseEnter={(e) => e.target.style.borderColor = 'var(--color-primary)'} onMouseLeave={(e) => e.target.style.borderColor = 'var(--color-gray-100)'}>
-              <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition duration-300" style={{
-                background: 'linear-gradient(to bottom right, var(--color-gray-100), var(--color-gray-200))'
-              }}>
-                <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{color: 'var(--color-primary)'}}>
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <h3 className="text-2xl font-semibold mb-4" style={{color: 'var(--color-gray-900)'}}>Secure Records</h3>
-              <p className="leading-relaxed" style={{color: 'var(--color-gray-600)'}}>
-                Your medical records are encrypted and stored securely, accessible only to you and your authorized healthcare providers.
-              </p>
-            </div>
+          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+            {/* Book Appointment Button */}
+            <Link
+              to="/book-appointment"
+              className="group flex items-center justify-between px-8 py-6 rounded-xl text-white font-semibold text-xl transition duration-300 hover:scale-105 shadow-lg hover:shadow-xl min-w-[350px]"
+              style={{
+                background: 'linear-gradient(to right, #0d7377, #14a085)'
+              }}
+            >
+              <span>{t('book_an_appointment')}</span>
+              <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </Link>
 
-            <div className="group text-center p-8 rounded-2xl hover:shadow-xl transition duration-300 border" style={{
-              borderColor: 'var(--color-gray-100)'
-            }} onMouseEnter={(e) => e.target.style.borderColor = 'var(--color-accent-teal)'} onMouseLeave={(e) => e.target.style.borderColor = 'var(--color-gray-100)'}>
-              <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition duration-300" style={{
-                background: 'linear-gradient(to bottom right, var(--color-gray-100), var(--color-gray-200))'
-              }}>
-                <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{color: 'var(--color-accent-teal)'}}>
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <h3 className="text-2xl font-semibold mb-4" style={{color: 'var(--color-gray-900)'}}>24/7 Access</h3>
-              <p className="leading-relaxed" style={{color: 'var(--color-gray-600)'}}>
-                Access your health information, book appointments, and connect with doctors anytime, anywhere.
-              </p>
-            </div>
+            {/* Pharmacy Locator Button */}
+            <Link
+              to="/pharmacy"
+              className="group flex items-center justify-between px-8 py-6 rounded-xl text-white font-semibold text-xl transition duration-300 hover:scale-105 shadow-lg hover:shadow-xl min-w-[350px]"
+              style={{
+                background: 'linear-gradient(to right, #32d74b, #30d158)'
+              }}
+            >
+              <span>{t('pharmacy_locator')}</span>
+              <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </Link>
 
-            <div className="group text-center p-8 rounded-2xl hover:shadow-xl transition duration-300 border" style={{
-              borderColor: 'var(--color-gray-100)'
-            }} onMouseEnter={(e) => e.target.style.borderColor = 'var(--color-accent-green)'} onMouseLeave={(e) => e.target.style.borderColor = 'var(--color-gray-100)'}>
-              <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition duration-300" style={{
-                background: 'linear-gradient(to bottom right, var(--color-gray-100), var(--color-gray-200))'
-              }}>
-                <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{color: 'var(--color-accent-green)'}}>
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+            {/* AI Seva Button */}
+            {isAuthenticated && (
+              <Link
+                to="/ai-seva"
+                className="group flex items-center justify-between px-8 py-6 rounded-xl text-white font-semibold text-xl transition duration-300 hover:scale-105 shadow-lg hover:shadow-xl min-w-[350px]"
+                style={{
+                  background: 'linear-gradient(to right, #1e3a8a, #1e40af)'
+                }}
+              >
+                <span>{t('ai_seva')}</span>
+                <svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" />
                 </svg>
-              </div>
-              <h3 className="text-2xl font-semibold mb-4" style={{color: 'var(--color-gray-900)'}}>Quick & Easy</h3>
-              <p className="leading-relaxed" style={{color: 'var(--color-gray-600)'}}>
-                Streamlined processes make healthcare management simple and efficient for both patients and providers.
-              </p>
-            </div>
+              </Link>
+            )}
           </div>
         </div>
       </section>
 
-      {/* Services Preview Section */}
-      <section className="py-20" style={{backgroundColor: 'var(--color-gray-50)'}}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl sm:text-5xl font-bold mb-4" style={{color: 'var(--color-gray-900)'}}>
-              Our Services
-            </h2>
-            <p className="text-xl max-w-3xl mx-auto" style={{color: 'var(--color-gray-600)'}}>
-              Comprehensive healthcare services tailored to meet your needs
-            </p>
-          </div>
+      {/* Features Section */}
+      
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition duration-300">
-              <div className="w-16 h-16 rounded-full flex items-center justify-center mb-4" style={{backgroundColor: 'var(--color-gray-100)'}}>
-                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{color: 'var(--color-primary)'}}>
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-semibold mb-2" style={{color: 'var(--color-gray-900)'}}>General Medicine</h3>
-              <p style={{color: 'var(--color-gray-600)'}}>Comprehensive primary care services</p>
-            </div>
-
-            <div className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition duration-300">
-              <div className="w-16 h-16 rounded-full flex items-center justify-center mb-4" style={{backgroundColor: 'var(--color-gray-100)'}}>
-                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{color: 'var(--color-accent-green)'}}>
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-semibold mb-2" style={{color: 'var(--color-gray-900)'}}>Cardiology</h3>
-              <p style={{color: 'var(--color-gray-600)'}}>Heart health and cardiovascular care</p>
-            </div>
-
-            <div className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition duration-300">
-              <div className="w-16 h-16 rounded-full flex items-center justify-center mb-4" style={{backgroundColor: 'var(--color-gray-100)'}}>
-                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{color: 'var(--color-accent-teal)'}}>
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-semibold mb-2" style={{color: 'var(--color-gray-900)'}}>Neurology</h3>
-              <p style={{color: 'var(--color-gray-600)'}}>Brain and nervous system care</p>
-            </div>
-
-            <div className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition duration-300">
-              <div className="w-16 h-16 rounded-full flex items-center justify-center mb-4" style={{backgroundColor: 'var(--color-gray-100)'}}>
-                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{color: 'var(--color-accent-lime)'}}>
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-semibold mb-2" style={{color: 'var(--color-gray-900)'}}>Pediatrics</h3>
-              <p style={{color: 'var(--color-gray-600)'}}>Specialized care for children</p>
+      {/* Doctorry Mission Section */}
+      <section className="py-20 bg-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          {/* Welcome Text */}
+          <div className="mb-4">
+            <div className="flex items-center justify-center gap-2">
+              <p className="text-lg uppercase tracking-wider font-bold text-gray-600">
+                Welcome to
+              </p>
+              <h2 className="text-3xl font-bold text-gray-800">
+                डॉक्टर
+              </h2>
             </div>
           </div>
 
-          <div className="text-center mt-12">
+          {/* Main Tagline */}
+          <div className="mb-8">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight" style={{
+              fontFamily: 'serif',
+              color: '#0d7377'
+            }}>
+              {t('quality_care_anytime_anywhere')}
+            </h1>
+          </div>
+
+          {/* Description */}
+          <p className="text-lg sm:text-xl text-gray-700 leading-relaxed max-w-3xl mx-auto mb-12">
+            At <span className="font-semibold text-gray-800">डॉक्टर</span>, we provide compassionate telemedicine services, making quality healthcare accessible to 173 villages. Reduce travel, connect with specialists, and receive timely care that puts rural well-being first.
+          </p>
+
+          {/* Learn More Button */}
+          <div className="flex justify-center">
             <Link
-              to="/services"
-              className="text-white px-8 py-4 rounded-full font-semibold text-lg transition duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
-              style={{
-                background: 'linear-gradient(to right, var(--color-primary), var(--color-primary-dark))'
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.background = 'linear-gradient(to right, var(--color-primary-dark), var(--color-secondary))';
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.background = 'linear-gradient(to right, var(--color-primary), var(--color-primary-dark))';
-              }}
+              to="/about"
+              className="inline-flex items-center text-lg font-medium transition duration-300 hover:scale-105"
+              style={{color: '#0d7377'}}
             >
-              View All Services
+              {t('learn_more')}
+              <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
             </Link>
           </div>
         </div>
+      </section>
+
+      {/* Card Carousel Section */}
+      <section className="py-20 bg-gray-50">
+        <CardCarousel />
       </section>
 
       {/* CTA Section */}
@@ -319,8 +317,6 @@ const Home = () => {
               <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
               <ul className="space-y-2">
                 <li><Link to="/about" className="transition duration-200" style={{color: 'var(--color-gray-400)'}} onMouseEnter={(e) => e.target.style.color = 'var(--color-white)'} onMouseLeave={(e) => e.target.style.color = 'var(--color-gray-400)'}>About Us</Link></li>
-                <li><Link to="/services" className="transition duration-200" style={{color: 'var(--color-gray-400)'}} onMouseEnter={(e) => e.target.style.color = 'var(--color-white)'} onMouseLeave={(e) => e.target.style.color = 'var(--color-gray-400)'}>Services</Link></li>
-                <li><Link to="/doctors" className="transition duration-200" style={{color: 'var(--color-gray-400)'}} onMouseEnter={(e) => e.target.style.color = 'var(--color-white)'} onMouseLeave={(e) => e.target.style.color = 'var(--color-gray-400)'}>Doctors</Link></li>
                 <li><Link to="/news" className="transition duration-200" style={{color: 'var(--color-gray-400)'}} onMouseEnter={(e) => e.target.style.color = 'var(--color-white)'} onMouseLeave={(e) => e.target.style.color = 'var(--color-gray-400)'}>News</Link></li>
               </ul>
             </div>
