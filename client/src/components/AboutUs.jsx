@@ -59,7 +59,7 @@ const AboutUs = () => {
               <h2 className="text-3xl font-bold text-gray-800">
                 डॉक्टर
               </h2>
-            </div>
+          </div>
           </div>
 
           {/* Main Heading */}
@@ -97,7 +97,7 @@ const AboutUs = () => {
             <div className="relative">
               <div className="bg-gradient-to-br from-teal-100 to-green-100 rounded-3xl p-8 shadow-2xl">
                 <div className="bg-white rounded-2xl p-6 shadow-lg">
-                  <div className="text-center">
+        <div className="text-center">
                     <div className="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-4" style={{backgroundColor: '#0d7377'}}>
                       <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
@@ -113,8 +113,10 @@ const AboutUs = () => {
         </div>
       </section>
 
-       {/* Team Section */}
-      <section className="py-20 bg-gray-50">
+      {/* Team Section */}
+      <section className="py-20" style={{
+        background: 'linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 50%, #f0fdf4 100%)'
+      }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">Meet Our Team</h2>
@@ -143,12 +145,14 @@ const AboutUs = () => {
         </div>
       </section>
 
-       {/* Stats Section */}
-      <section className="py-20 bg-gray-50">
+      {/* Stats Section */}
+      <section className="py-20" style={{
+        background: 'linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 50%, #f0fdf4 100%)'
+      }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">Our Impact</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Numbers that reflect our commitment to improving rural healthcare accessibility and quality.
             </p>
           </div>

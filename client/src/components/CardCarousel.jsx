@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import styled from "styled-components";
+import imag1 from "../assets/imag1.jpg";
+import imag2 from "../assets/imag2.png";
 
 const CarouselWrapper = styled.div`
   display: flex;
@@ -44,6 +46,8 @@ const Card = styled(motion.div)`
   border: 2px solid white;
   background-size: cover;
   background-position: center;
+  background-repeat: no-repeat;
+  background-color: #f3f4f6; /* Fallback background color */
   @media (min-width: 768px) {
     width: 24rem;
     height: 24rem;
@@ -94,8 +98,8 @@ const Button = styled.button`
 
 export default function CardCarousel({
   image1Url = "https://images.indianexpress.com/2024/02/punjab-medical-camp.jpg",
-  image2Url = "https://picsum.photos/id/1018/600/600",
-  image3Url = "https://picsum.photos/id/1019/600/600",
+  image2Url = imag1,
+  image3Url = imag2,
 }) {
   const [currentIndex, setCurrentIndex] = useState(1);
 
@@ -104,6 +108,9 @@ export default function CardCarousel({
     { id: 2, image: image2Url },
     { id: 3, image: image3Url },
   ];
+
+  // Debug: Log the image URLs
+  console.log('Carousel images:', { image1Url, image2Url, image3Url });
 
   const goToPrevious = () => {
     setCurrentIndex((prevIndex) =>

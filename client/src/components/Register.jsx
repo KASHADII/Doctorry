@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useTranslation } from 'react-i18next';
+import DocumentUpload from './DocumentUpload';
 import Logo from '../assets/Logo.svg';
 import SidebarImage from '../assets/sidebar.png';
 import HeartImage from '../assets/heart.png';
@@ -20,6 +21,8 @@ const Register = () => {
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [documents, setDocuments] = useState([]);
+  const [currentStep, setCurrentStep] = useState(1);
   
   const { register } = useAuth();
   const navigate = useNavigate();
@@ -31,6 +34,18 @@ const Register = () => {
       [e.target.name]: e.target.value,
     });
     setError('');
+  };
+
+  const handleDocumentsChange = (newDocuments) => {
+    setDocuments(newDocuments);
+  };
+
+  const handleNextStep = () => {
+    setCurrentStep(2);
+  };
+
+  const handlePrevStep = () => {
+    setCurrentStep(1);
   };
 
   const handleSubmit = async (e) => {
@@ -51,11 +66,24 @@ const Register = () => {
       return;
     }
 
+    // Check document requirements
+    if (documents.length < 2) {
+      setError('Please select at least 2 documents to complete registration');
+      setLoading(false);
+      return;
+    }
+
     const { confirmPassword, ...userData } = formData;
     const result = await register(userData);
     
     if (result.success) {
-      navigate('/dashboard');
+      // Store documents temporarily for post-registration upload
+      if (documents.length > 0) {
+        localStorage.setItem('pendingDocuments', JSON.stringify(documents));
+        navigate('/upload-documents');
+      } else {
+        navigate('/dashboard');
+      }
     } else {
       setError(result.message);
     }
@@ -122,6 +150,24 @@ const Register = () => {
                   </div>
                   <h2 className="text-2xl font-bold text-gray-900 mb-2">Create your account</h2>
                   <p className="text-gray-600">Join डॉक्टर and get started with quality healthcare</p>
+                  
+                  {/* Step Indicator */}
+                  <div className="flex items-center justify-center mt-4 space-x-4">
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
+                      currentStep >= 1 ? 'bg-blue-600 text-white' : 'bg-gray-300 text-gray-600'
+                    }`}>
+                      1
+                    </div>
+                    <div className={`w-16 h-1 ${currentStep >= 2 ? 'bg-blue-600' : 'bg-gray-300'}`}></div>
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
+                      currentStep >= 2 ? 'bg-blue-600 text-white' : 'bg-gray-300 text-gray-600'
+                    }`}>
+                      2
+                    </div>
+                  </div>
+                  <p className="text-sm text-gray-500 mt-2">
+                    {currentStep === 1 ? 'Personal Information' : 'Document Upload'}
+                  </p>
                 </div>
 
                 {error && (
@@ -130,7 +176,8 @@ const Register = () => {
                   </div>
                 )}
 
-                <form onSubmit={handleSubmit} className="space-y-6">
+                {currentStep === 1 ? (
+                  <form onSubmit={handleNextStep} className="space-y-6">
                   {/* Name Fields */}
                   <div className="grid grid-cols-2 gap-4">
                     <div>
@@ -331,22 +378,17 @@ const Register = () => {
                     </div>
                   </div>
 
-                  {/* Register Button */}
+                  {/* Next Button */}
                   <button
                     type="submit"
-                    disabled={loading}
-                    className="w-full text-white py-4 px-6 rounded-xl font-semibold text-lg transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
+                    className="w-full text-white py-4 px-6 rounded-xl font-semibold text-lg transition duration-200 shadow-lg hover:shadow-xl"
                     style={{
                       backgroundColor: 'var(--color-primary)'
                     }}
-                    onMouseEnter={(e) => {
-                      if (!loading) e.target.style.backgroundColor = 'var(--color-primary-dark)';
-                    }}
-                    onMouseLeave={(e) => {
-                      if (!loading) e.target.style.backgroundColor = 'var(--color-primary)';
-                    }}
+                    onMouseEnter={(e) => e.target.style.backgroundColor = 'var(--color-primary-dark)'}
+                    onMouseLeave={(e) => e.target.style.backgroundColor = 'var(--color-primary)'}
                   >
-                    {loading ? 'Creating Account...' : 'Create Account'}
+                    Next: Upload Documents
                   </button>
 
                   {/* Login Link */}
@@ -365,6 +407,70 @@ const Register = () => {
                     </p>
                   </div>
                 </form>
+                ) : (
+                  <div className="space-y-6">
+                    {/* Document Upload Component */}
+                    <DocumentUpload 
+                      onDocumentsChange={handleDocumentsChange}
+                      requiredDocuments={2}
+                    />
+                    
+                    {/* Action Buttons */}
+                    <div className="flex space-x-4">
+                      <button
+                        onClick={handlePrevStep}
+                        className="flex-1 py-4 px-6 rounded-xl font-semibold text-lg transition duration-200 border-2"
+                        style={{
+                          borderColor: 'var(--color-primary)',
+                          color: 'var(--color-primary)'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.target.style.backgroundColor = 'var(--color-primary)';
+                          e.target.style.color = 'white';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.target.style.backgroundColor = 'transparent';
+                          e.target.style.color = 'var(--color-primary)';
+                        }}
+                      >
+                        Back
+                      </button>
+                      
+                      <button
+                        onClick={handleSubmit}
+                        disabled={loading || documents.length < 2}
+                        className="flex-1 text-white py-4 px-6 rounded-xl font-semibold text-lg transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
+                        style={{
+                          backgroundColor: 'var(--color-primary)'
+                        }}
+                        onMouseEnter={(e) => {
+                          if (!loading && documents.length >= 2) e.target.style.backgroundColor = 'var(--color-primary-dark)';
+                        }}
+                        onMouseLeave={(e) => {
+                          if (!loading && documents.length >= 2) e.target.style.backgroundColor = 'var(--color-primary)';
+                        }}
+                      >
+                        {loading ? 'Creating Account...' : 'Create Account'}
+                      </button>
+                    </div>
+                    
+                    {/* Login Link */}
+                    <div className="text-center">
+                      <p className="text-gray-600">
+                        Already have an account?{' '}
+                        <Link
+                          to="/login"
+                          className="font-medium transition duration-200"
+                          style={{color: 'var(--color-primary)'}}
+                          onMouseEnter={(e) => e.target.style.color = 'var(--color-primary-dark)'}
+                          onMouseLeave={(e) => e.target.style.color = 'var(--color-primary)'}
+                        >
+                          Sign in here
+                        </Link>
+                      </p>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Right Panel - Heart Shape with Pills */}

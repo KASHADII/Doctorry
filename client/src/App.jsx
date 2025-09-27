@@ -5,6 +5,9 @@ import { useTranslation } from 'react-i18next';
 import Home from './components/Home';
 import Login from './components/Login';
 import Register from './components/Register';
+import ForgotPassword from './components/ForgotPassword';
+import ResetPassword from './components/ResetPassword';
+import PostRegistrationUpload from './components/PostRegistrationUpload';
 import Dashboard from './components/Dashboard';
 import AdminLogin from './components/AdminLogin';
 import AdminDashboard from './components/AdminDashboard';
@@ -89,6 +92,30 @@ function App() {
                 <PublicRoute>
                   <Register />
                 </PublicRoute>
+              } 
+            />
+            <Route 
+              path="/forgot-password" 
+              element={
+                <PublicRoute>
+                  <ForgotPassword />
+                </PublicRoute>
+              } 
+            />
+            <Route 
+              path="/reset-password" 
+              element={
+                <PublicRoute>
+                  <ResetPassword />
+                </PublicRoute>
+              } 
+            />
+            <Route 
+              path="/upload-documents" 
+              element={
+                <ProtectedRoute>
+                  <PostRegistrationUpload />
+                </ProtectedRoute>
               } 
             />
             

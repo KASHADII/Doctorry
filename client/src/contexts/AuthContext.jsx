@@ -119,6 +119,134 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const forgotPassword = async (email) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/forgot-password`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        return { success: true, message: data.message, resetToken: data.resetToken };
+      } else {
+        return { success: false, message: data.message };
+      }
+    } catch (error) {
+      console.error('Forgot password error:', error);
+      return { success: false, message: 'Network error. Please try again.' };
+    }
+  };
+
+  const resetPassword = async (token, newPassword) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/reset-password`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ token, newPassword }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        return { success: true, message: data.message };
+      } else {
+        return { success: false, message: data.message };
+      }
+    } catch (error) {
+      console.error('Reset password error:', error);
+      return { success: false, message: 'Network error. Please try again.' };
+    }
+  };
+
+  const uploadDocument = async (file, documentType) => {
+    try {
+      console.log('Uploading document:', {
+        fileName: file.name,
+        fileType: file.type,
+        fileSize: file.size,
+        documentType: documentType,
+        hasToken: !!token
+      });
+
+      const formData = new FormData();
+      formData.append('document', file);
+      formData.append('documentType', documentType);
+
+      const response = await fetch(`${API_BASE_URL}/auth/upload-document-mock`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ documentType }),
+      });
+
+      const data = await response.json();
+      console.log('Upload response:', { status: response.status, data });
+
+      if (response.ok) {
+        return { success: true, document: data.document };
+      } else {
+        return { success: false, message: data.message };
+      }
+    } catch (error) {
+      console.error('Document upload error:', error);
+      return { success: false, message: 'Network error. Please try again.' };
+    }
+  };
+
+  const getUserDocuments = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/documents`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        return { success: true, documents: data.documents };
+      } else {
+        return { success: false, message: data.message };
+      }
+    } catch (error) {
+      console.error('Get documents error:', error);
+      return { success: false, message: 'Network error. Please try again.' };
+    }
+  };
+
+  const deleteDocument = async (documentId) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/documents/${documentId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        return { success: true, message: data.message };
+      } else {
+        return { success: false, message: data.message };
+      }
+    } catch (error) {
+      console.error('Delete document error:', error);
+      return { success: false, message: 'Network error. Please try again.' };
+    }
+  };
+
   const updateProfile = async (profileData) => {
     try {
       const response = await fetch(`${API_BASE_URL}/user/profile`, {
@@ -151,6 +279,11 @@ export const AuthProvider = ({ children }) => {
     login,
     register,
     logout,
+    forgotPassword,
+    resetPassword,
+    uploadDocument,
+    getUserDocuments,
+    deleteDocument,
     updateProfile,
     isAuthenticated: !!user,
     userRole: user?.role || 'user',

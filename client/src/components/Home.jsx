@@ -234,7 +234,9 @@ const Home = () => {
       </section>
 
       {/* Card Carousel Section */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20" style={{
+        background: 'linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 50%, #f0fdf4 100%)'
+      }}>
         <CardCarousel />
       </section>
 
